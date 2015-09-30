@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Nettbutikk.Models;
 using Nettbutikk.DAL;
+using Nettbutikk.Infrastructure;
 
 namespace Nettbutikk
 {
