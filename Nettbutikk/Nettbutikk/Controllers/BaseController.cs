@@ -17,13 +17,14 @@ namespace Nettbutikk.Controllers
     * sessions and authentication much easier.
     * </summary>
     */
+    [RequireHttps]
     public class BaseController : Controller
     {
         private NettbutikkContext _db;
         
         /**
          * <summary>
-         * 
+         * A reference to the local database context.
          * </summary>
          */
         protected NettbutikkContext db
@@ -37,7 +38,6 @@ namespace Nettbutikk.Controllers
         }
 
         private RoleManager _roleManager;
-        
 
         protected RoleManager RoleManager
         {
@@ -46,11 +46,41 @@ namespace Nettbutikk.Controllers
                 return _roleManager ?? (_roleManager = Request.GetOwinContext().GetUserManager<RoleManager>());
             }
         }
-        
-        private bool IsCurrentUser(User user)
+
+        private UserManager _userManager;
+
+        protected UserManager UserManager
         {
-            return User.Identity.Equals(user);
+            get
+            {
+                return _userManager ?? (_userManager = Request.GetOwinContext().GetUserManager<UserManager>());
+            }
         }
 
+        private SignInManager<User, Guid> _signInManager;
+
+        protected SignInManager<User, Guid> SignInManager
+        {
+            get
+            {
+                return _signInManager ?? (_signInManager = Request.GetOwinContext().GetUserManager<SignInManager<User, Guid>>());
+            }
+        }
+
+        /**
+         * Summary:
+         *   A utility helper-method used to redirect to a local URI, or the index if it is not a local url.
+         */
+        protected ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }
