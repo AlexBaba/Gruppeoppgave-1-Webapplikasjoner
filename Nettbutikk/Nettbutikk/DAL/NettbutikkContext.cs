@@ -7,7 +7,7 @@ using System;
 
 namespace Nettbutikk.DAL
 {
-    public class NettbutikkContext : IdentityDbContext<User, IdentityRole<Guid, IdentityUserRole<Guid>>, Guid, IdentityUserLogin<Guid>, IdentityUserRole<Guid>, IdentityUserClaim<Guid>>
+    public class NettbutikkContext : IdentityDbContext
     {
 
         public NettbutikkContext() : base("Nettbutikk")
@@ -22,7 +22,7 @@ namespace Nettbutikk.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }
-
+        
         internal static NettbutikkContext Create()
         {
             return new NettbutikkContext();

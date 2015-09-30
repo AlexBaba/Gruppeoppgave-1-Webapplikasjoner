@@ -9,13 +9,12 @@ using System.Net.Http.Formatting;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
 
-[assembly: OwinStartup(typeof(Nettbutikk.Infrastructure.Startup))]
 
+[assembly: OwinStartup(typeof(Nettbutikk.Infrastructure.Startup))]
 namespace Nettbutikk.Infrastructure
 {
     public class Startup
     {
-
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration httpConfig = new HttpConfiguration();
@@ -35,9 +34,6 @@ namespace Nettbutikk.Infrastructure
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(NettbutikkContext.Create);
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
-
-            // Plugin the OAuth bearer JSON Web Token tokens generation and Consumption will be here
-
         }
 
         private void ConfigureWebApi(HttpConfiguration config)
