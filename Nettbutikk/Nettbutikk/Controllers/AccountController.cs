@@ -12,9 +12,8 @@ using Nettbutikk.Models;
 using Nettbutikk.Infrastructure;
 using Nettbutikk.Models.Bindings;
 
-namespace Nettbutikk.Controllers
+namespace Nettbutikk.Controllers.Account
 {
-    [Authorize]
     public class AccountController : BaseController
     {
         // GET /account/login
@@ -442,14 +441,6 @@ namespace Nettbutikk.Controllers
             get
             {
                 return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
             }
         }
 

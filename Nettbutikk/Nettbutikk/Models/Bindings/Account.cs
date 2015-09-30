@@ -141,7 +141,7 @@ namespace Nettbutikk.Models.Bindings
         public string ConfirmPassword { get; set; }
     }
 
-    internal class EditAccount
+    public class EditAccount
     {
         [Required]
         public string Name { get; set; }
@@ -158,5 +158,23 @@ namespace Nettbutikk.Models.Bindings
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class RegisterAccountPhone
+    {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string Number;
+    }
+
+    public class VerifyAccountPhone
+    {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string Number;
+
+        [Required]
+        [Display(Name = "Your code")]
+        public string Code;
     }
 }
