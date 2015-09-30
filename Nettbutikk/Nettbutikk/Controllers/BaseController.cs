@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Nettbutikk.DAL;
 using Nettbutikk.Infrastructure;
-using Nettbutikk.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -21,7 +18,11 @@ namespace Nettbutikk.Controllers
     public class BaseController : Controller
     {
         private NettbutikkContext _db;
-        
+
+        private UserManager _userManager;
+
+        private SignInManager _signInManager;
+
         /**
          * <summary>
          * A reference to the local database context.
@@ -29,12 +30,21 @@ namespace Nettbutikk.Controllers
          */
         protected NettbutikkContext db
         {
-            get { return _db ?? (_db = new NettbutikkContext()); }
+            get
+            {
+                return _db ?? (_db = NettbutikkContext.Create());
+            }
         }
 
         public BaseController()
         {
-            _db = new NettbutikkContext();
+        }
+
+        public BaseController(UserManager userManager,
+            SignInManager signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         private RoleManager _roleManager;
@@ -43,33 +53,35 @@ namespace Nettbutikk.Controllers
         {
             get
             {
-                return _roleManager ?? (_roleManager = Request.GetOwinContext().GetUserManager<RoleManager>());
+                return _roleManager ?? (_roleManager =
+                    Request.GetOwinContext().GetUserManager<RoleManager>());
             }
         }
-
-        private UserManager _userManager;
 
         protected UserManager UserManager
         {
             get
             {
-                return _userManager ?? (_userManager = Request.GetOwinContext().GetUserManager<UserManager>());
+                return _userManager ?? (_userManager =
+                    Request.GetOwinContext().GetUserManager<UserManager>());
             }
         }
 
-        private SignInManager<User, Guid> _signInManager;
-
-        protected SignInManager<User, Guid> SignInManager
+        protected SignInManager SignInManager
         {
             get
             {
-                return _signInManager ?? (_signInManager = Request.GetOwinContext().GetUserManager<SignInManager<User, Guid>>());
+                return _signInManager ?? (_signInManager =
+                    Request.GetOwinContext().GetUserManager<SignInManager>());
             }
         }
 
+#region Helpers
+
         /**
          * Summary:
-         *   A utility helper-method used to redirect to a local URI, or the index if it is not a local url.
+         *   A utility helper-method used to redirect to a local URI, or the
+         *   index if it is not a local url.
          */
         protected ActionResult RedirectToLocal(string returnUrl)
         {
@@ -82,5 +94,35 @@ namespace Nettbutikk.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (RoleManager != null)
+                {
+                    RoleManager.Dispose();
+                    _roleManager = null;
+                }
+
+                if (UserManager != null)
+                {
+                    UserManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (SignInManager != null)
+                {
+                    SignInManager.Dispose();
+                    _signInManager = null;
+                }
+
+            }
+
+            base.Dispose(disposing);
+        }
+
+#endregion
+
     }
 }
