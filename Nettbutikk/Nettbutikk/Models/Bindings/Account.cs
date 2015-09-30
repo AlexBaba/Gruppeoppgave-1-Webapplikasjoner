@@ -1,9 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Nettbutikk.Models.Bindings
 {
+    public class ExternalAccounts
+    {
+        public IList<UserLoginInfo> CurrentLogins;
+        public IList<AuthenticationDescription> OtherLogins;
+    }
+
     public class ExternalAccountLoginConfirmation
     {
         [Required]
@@ -176,5 +184,17 @@ namespace Nettbutikk.Models.Bindings
         [Required]
         [Display(Name = "Your code")]
         public string Code;
+    }
+
+    public class ManageAccount
+    {
+        public bool HasPassword;
+        public bool TwoFactor;
+        public IList<UserLoginInfo> Logins;
+        public bool BrowserRemembered;
+
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string PhoneNumber;
     }
 }

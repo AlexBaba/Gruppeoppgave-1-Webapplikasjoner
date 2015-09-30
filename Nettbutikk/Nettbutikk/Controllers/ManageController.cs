@@ -22,7 +22,7 @@ namespace Nettbutikk.Controllers.Account
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            var model = new ManageAccount
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
@@ -70,10 +70,19 @@ namespace Nettbutikk.Controllers.Account
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
-            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
+            var userLogins = await UserManager
+                .GetLoginsAsync(User.Identity.GetUserId());
+
+            var otherLogins = AuthenticationManager
+                .GetExternalAuthenticationTypes()
+                .Where(auth =>
+                    userLogins.All(ul =>
+                        auth.AuthenticationType != ul.LoginProvider))
+                .ToList();
+
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            return View(new ManageLoginsViewModel
+
+            return View(new ExternalAccounts
             {
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
