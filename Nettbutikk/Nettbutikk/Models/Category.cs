@@ -12,15 +12,7 @@ namespace Nettbutikk.Models
         {
             this.Products = new HashSet<Product>();
         }
-
-        public Category(string name, string description, Category parentCategory = null)
-            : this()
-        {
-            Name = name;
-            Description = description;
-            ParentCategory = parentCategory;
-        }
-
+        
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -37,10 +29,10 @@ namespace Nettbutikk.Models
             get;
             set;
         }
-        
+
+        internal string ParentCategoryId { get; set; }
         public virtual Category ParentCategory { get; set; }
         
         public virtual ICollection<Product> Products { get; set; }
-        
     }
 }

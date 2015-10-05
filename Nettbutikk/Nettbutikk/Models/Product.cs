@@ -9,12 +9,8 @@ namespace Nettbutikk.Models
     public partial class Product
     {
 
-        public Product(string name, float price, string description, Category category)
+        public Product()
         {
-            this.Name = name;
-            this.Price = price;
-            this.Description = description;
-            Category = category;
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
