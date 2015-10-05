@@ -6,6 +6,7 @@ namespace Nettbutikk.Models
 {
     public class Address
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id
         {
@@ -54,5 +55,8 @@ namespace Nettbutikk.Models
             get;
             set;
         }
+        
+        [Required]
+        public virtual User Addressee { get; set; }
     }
 }

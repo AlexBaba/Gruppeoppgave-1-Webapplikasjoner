@@ -9,18 +9,19 @@ namespace Nettbutikk.Models
     
     public partial class Order
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         [HiddenInput(DisplayValue = false)]
         public Guid Id { get; set; }
         
         public DateTime PlacementDateTime { get; set; }
-
+        
         [Required]
-        [ForeignKey("CustomerId")]
-        [HiddenInput(DisplayValue = false)]
-        public Guid CustomerId { get; set; }
-
-        public virtual User Customer { get; set; }
+        public virtual User Customer
+        {
+            get;
+            set;
+        }
         
         [Required]
         public virtual Address ShippingAddress

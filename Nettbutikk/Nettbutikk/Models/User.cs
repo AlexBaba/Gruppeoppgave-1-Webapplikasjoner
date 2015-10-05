@@ -1,58 +1,34 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using Microsoft.AspNet.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace Nettbutikk.Models
 {
+    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class User : IdentityUser
     {
         private ICollection<Address> addresses;
         private ICollection<Order> orders;
         
-        [Key]
-        [Required]
-        public string Name
+        public User()
         {
-            get;
-            set;
+            addresses = new HashSet<Address>();
+            orders = new HashSet<Order>();
         }
-
-        public string Phone { get; set; }
-
-        [ForeignKey("PrimaryShippingAddress")]
-        public Guid PrimaryShippingAddressId
-        {
-            get;
-            set;
-        }
-
+        
         public virtual Address PrimaryShippingAddress { get; set; }
-
-        [ForeignKey("PrimaryBillingAddress")]
-        public Guid PrimaryBillingAddressId
-        {
-            get;
-            set;
-        }
-
+        
         public virtual Address PrimaryBillingAddress { get; set; }
-        
-        public virtual ICollection<Address> Addresses
-        {
-            get { return addresses ?? (addresses = new HashSet<Address>()); }
-            set { addresses = value; }
-        }
-        
-        public virtual ICollection<Order> Orders
-        {
-            get { return orders ?? (orders = new HashSet<Order>()); }
-            set { orders = value; }
-        }
+
+        public virtual ICollection<Address> Addresses { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
