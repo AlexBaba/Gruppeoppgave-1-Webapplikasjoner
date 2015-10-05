@@ -1,43 +1,35 @@
-﻿using System;
+﻿using Nettbutikk.Models;
+using System;
 using System.Data.Entity;
-using System.Threading.Tasks;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using Nettbutikk.Models;
-using Nettbutikk.Models.Bindings;
 
 namespace Nettbutikk.Controllers.Admin
 {
-    [RoutePrefix("Admin")]
-    [Authorize(Roles = "Administrator,Manager,Owner")]
-    public class ProductsAdminController : BaseController
+    [Authorize]
+    public class ProductsController : Controllers.ProductsController
     {
         // GET: Products/Create
         public ActionResult Create()
         {
-            ViewBag.Categories = new SelectList(db.Categories, "Id", "Name");
-
             return View();
         }
 
         // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Product product)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Price,Description,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
                 product.Id = Guid.NewGuid();
-
                 db.Products.Add(product);
                 await db.SaveChangesAsync();
-
                 return RedirectToAction("Index");
             }
-
-            ViewBag.Categories = new SelectList(db.Categories, "Id", "Name");
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
 
             return View(product);
         }
@@ -49,24 +41,20 @@ namespace Nettbutikk.Controllers.Admin
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             Product product = await db.Products.FindAsync(id);
-
             if (product == null)
             {
                 return HttpNotFound();
             }
-
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
-
             return View(product);
         }
 
         // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(EditProduct product)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Price,Description,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -74,9 +62,6 @@ namespace Nettbutikk.Controllers.Admin
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
-
             return View(product);
         }
 
@@ -87,27 +72,22 @@ namespace Nettbutikk.Controllers.Admin
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             Product product = await db.Products.FindAsync(id);
-
             if (product == null)
             {
                 return HttpNotFound();
             }
-
             return View(product);
         }
 
         // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             Product product = await db.Products.FindAsync(id);
-
             db.Products.Remove(product);
-
             await db.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
 

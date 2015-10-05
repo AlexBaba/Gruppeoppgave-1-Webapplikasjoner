@@ -1,31 +1,25 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿
+using Microsoft.AspNet.Identity.EntityFramework;
 using Nettbutikk.Models;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System;
-
 
 namespace Nettbutikk.DAL
 {
-    public class NettbutikkContext : IdentityDbContext
+    public class NettbutikkContext : IdentityDbContext<User>
     {
-
-        public NettbutikkContext() : base("Nettbutikk")
+        public NettbutikkContext()
+            : base("Nettbutikk", throwIfV1Schema: false)
         {
         }
-        public DbSet<Address> Addresses { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderLine> OrderLines { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-        }
-        
-        internal static NettbutikkContext Create()
+        public static NettbutikkContext Create()
         {
             return new NettbutikkContext();
         }
+
+        public System.Data.Entity.DbSet<Nettbutikk.Models.Address> Addresses { get; set; }
+
+        public System.Data.Entity.DbSet<Nettbutikk.Models.Product> Products { get; set; }
+
+        public System.Data.Entity.DbSet<Nettbutikk.Models.Category> Categories { get; set; }
     }
 }

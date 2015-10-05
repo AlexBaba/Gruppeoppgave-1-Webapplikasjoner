@@ -5,30 +5,26 @@ using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers.Account
 {
-    [Route("password")]
-    public class PasswordController : BaseController
+    public class PasswordController : ManageController
     {
-        // GET /account/password/change
-        public ActionResult Change()
+        //
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangePassword()
         {
             return View();
         }
 
-        // POST /account/password/change
+        //
+        // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Change(
-            ChangeAccountPassword model)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            var result = await UserManager
-                .ChangePasswordAsync(User.Identity.GetUserId(),
-                    model.OldPassword, model.NewPassword);
-
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -36,24 +32,24 @@ namespace Nettbutikk.Controllers.Account
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Index", new { Message = MessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
-
             AddErrors(result);
-
             return View(model);
         }
-        
-        // GET: /account/password
-        public ActionResult Password()
+
+        //
+        // GET: /Manage/SetPassword
+        public ActionResult SetPassword()
         {
-            return View("manage", "account");
+            return View();
         }
-        
-        // POST /account/password
+
+        //
+        // POST: /Manage/SetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Password(SetAccountPassword model)
+        public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +61,7 @@ namespace Nettbutikk.Controllers.Account
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     }
-                    return RedirectToAction("Index", new { Message = MessageId.SetPasswordSuccess });
+                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
                 }
                 AddErrors(result);
             }
@@ -74,11 +70,5 @@ namespace Nettbutikk.Controllers.Account
             return View(model);
         }
 
-        private enum MessageId
-        {
-            SetPasswordSuccess,
-            ChangePasswordSuccess,
-            Error
-        }
     }
 }

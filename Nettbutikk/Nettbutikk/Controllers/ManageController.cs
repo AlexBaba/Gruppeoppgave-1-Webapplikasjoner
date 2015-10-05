@@ -112,18 +112,7 @@ namespace Nettbutikk.Controllers.Account
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = MessageId.Error });
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && UserManager != null)
-            {
-                UserManager.Dispose();
-                UserManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
-
+        
         // GET /manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {

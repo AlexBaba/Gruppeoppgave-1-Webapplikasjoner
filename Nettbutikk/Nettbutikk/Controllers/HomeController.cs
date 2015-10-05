@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nettbutikk.Models.Binding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -24,6 +25,11 @@ namespace Nettbutikk.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            return View();
+        }
+
+        public ActionResult Search(Search search)
+        {
             return View();
         }
     }
