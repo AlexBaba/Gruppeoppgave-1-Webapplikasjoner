@@ -72,7 +72,7 @@ namespace Nettbutikk
             );
 
             routes.MapRoute(
-                name: "Default",
+                name: "Admin/Products",
                 url: "admin/products/{action}",
                 defaults: new {
                     controller = "ProductsController",
