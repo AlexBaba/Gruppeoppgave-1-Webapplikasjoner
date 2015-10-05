@@ -35,22 +35,26 @@ namespace Nettbutikk.Migrations
 
                 userManager.Create(user, "password");
 
+                db.SaveChanges();
+
+                user = userManager.FindById(user.Id);
+                
                 if(!roleManager.RoleExists("Administrator"))
                 {
                     roleManager.Create(new IdentityRole("Administrator"));
 
-                    userManager.AddToRole("admin@example.com", "Administrator");
+                    userManager.AddToRole(user.Id, "Administrator");
                 }
             }
 
             var tanks = new Category { Name = "Tanks", Description = "Tanks" };
             var cannons = new Category { Name = "Cannons", Description = "Cannons" };
             var engines = new Category { Name = "Engines", Description = "Engines" };
+            
             // main categories.
-            db.Categories.AddOrUpdate(c => c.Name,
-                tanks,
-                cannons,
-                engines);
+            db.Categories.Add(tanks);
+            db.Categories.Add(cannons);
+            db.Categories.Add(engines);
 
             db.SaveChanges();
 

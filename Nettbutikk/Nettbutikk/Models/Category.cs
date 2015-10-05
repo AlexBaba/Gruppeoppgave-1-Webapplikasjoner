@@ -1,11 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
 namespace Nettbutikk.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    
+{   
     public partial class Category
     {   
         public Category()
@@ -29,8 +28,7 @@ namespace Nettbutikk.Models
             get;
             set;
         }
-
-        internal string ParentCategoryId { get; set; }
+        
         public virtual Category ParentCategory { get; set; }
         
         public virtual ICollection<Product> Products { get; set; }
