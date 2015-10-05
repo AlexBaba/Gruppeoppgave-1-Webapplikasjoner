@@ -1,4 +1,4 @@
-﻿@model Nettbutikk.Models.Product
+﻿@model Nettbutikk.Models.Category
 
 @{
     ViewBag.Title = "Details";
@@ -8,7 +8,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Product</h4>
+    <h4>Category</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -20,27 +20,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CategoryId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CategoryId)
         </dd>
 
     </dl>

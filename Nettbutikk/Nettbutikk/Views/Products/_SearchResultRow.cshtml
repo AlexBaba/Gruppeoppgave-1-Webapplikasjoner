@@ -1,0 +1,21 @@
+﻿@using Nettbutikk.Models
+@model Product
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Category.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Price)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Description)
+    </td>
+    <td>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+        }
+        @Html.ActionLink("Details", "Details", new { id = Model.Id })
+    </td>
+</tr>
+
