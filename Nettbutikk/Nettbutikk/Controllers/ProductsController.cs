@@ -20,8 +20,8 @@ namespace Nettbutikk.Controllers
             return View(await db.Products.ToListAsync());
         }
 
-        // GET: Products/Details/5
-        public async Task<ActionResult> Details(Guid? id)
+        // GET: Products/{id:Guid}
+        public async Task<ActionResult> DetailsId(Guid? id)
         {
             if (id == null)
             {
@@ -32,6 +32,24 @@ namespace Nettbutikk.Controllers
             {
                 return HttpNotFound();
             }
+            return View(product);
+        }
+
+        // GET: Products/{name:string}
+        public async Task<ActionResult> DetailsName(string name)
+        {
+            if (name == null || name.Length < 1)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Product product = await db.Products.Where(p => p.Name == name).FirstAsync();
+
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
             return View(product);
         }
     }
