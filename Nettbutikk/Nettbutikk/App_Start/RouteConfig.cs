@@ -1,8 +1,4 @@
-﻿using Nettbutikk.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Nettbutikk.Infrastructure;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -17,29 +13,46 @@ namespace Nettbutikk
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-                name: "ProductDetails",
+                name: "ProductDetailsById",
                 url: "product/{id:Guid}",
-                defaults: new {
-                    controller = "ProductsController",
-                    action = "Details",
-                    id = UrlParameter.Optional
+                defaults: new
+                {
+                    controller = "Products",
+                    action = "DetailsId"
+                },
+                constraints: new
+                {
+                    id = new GuidConstraint()
                 }
             );
 
             routes.MapRoute(
-                name: "Products",
-                url: "products/{id}/{action}",
-                defaults: new {
-                    controller = "ProductsController",
-                    action = "Index",
-                    id = UrlParameter.Optional
+                name: "ProductDetailsByName",
+                url: "product/{name:string}",
+                defaults: new
+                {
+                    controller = "Products",
+                    action = "DetailsName"
                 }
             );
 
             routes.MapRoute(
-                name: "Category",
+                name: "ProductActions",
+                url: "product/{id:Guid}/{action}",
+                defaults: new {
+                    controller = "Products",
+                    action = "Edit"
+                },
+                constraints: new
+                {
+                    id = new GuidConstraint()
+                }
+            );
+
+            routes.MapRoute(
+                name: "CategoryByName",
                 url: "category/{name:string}",
-                defaults: new { controller = "CategoriesController", action = "show" }
+                defaults: new { controller = "Categories", action = "ListProducts" }
             );
 
             routes.MapRoute(
@@ -47,7 +60,7 @@ namespace Nettbutikk
                 url: "categories/{action}/{id}",
                 defaults: new
                 {
-                    controller = "CategoriesController",
+                    controller = "Categories",
                     action = "Index"
                 }
             );
@@ -75,7 +88,7 @@ namespace Nettbutikk
                 name: "Admin/Products",
                 url: "admin/products/{action}",
                 defaults: new {
-                    controller = "ProductsController",
+                    controller = "Products",
                     action = "Index",
                     id = UrlParameter.Optional
                 }
