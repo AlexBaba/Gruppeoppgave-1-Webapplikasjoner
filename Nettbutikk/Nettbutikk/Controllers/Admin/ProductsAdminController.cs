@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using Nettbutikk.Models;
 using Nettbutikk.Models.Bindings;
+using Nettbutikk.Models.Binding;
 
 namespace Nettbutikk.Controllers.Admin
 {
@@ -24,11 +25,19 @@ namespace Nettbutikk.Controllers.Admin
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Product product)
+        public async Task<ActionResult> Create(CreateProduct model)
         {
+            var category = await db.Categories.FindAsync(model.CategoryName);
+
             if (ModelState.IsValid)
             {
-                product.Id = Guid.NewGuid();
+                var product = new Product
+                {
+                    Id = model.Id,
+                    Name = model.Name,
+                    Description = model.Description,
+                    Category = category
+                };
 
                 db.Products.Add(product);
                 await db.SaveChangesAsync();
@@ -37,9 +46,9 @@ namespace Nettbutikk.Controllers.Admin
             }
 
             ViewBag.Categories = new SelectList(db.Categories, "Id", "Name");
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
+            ViewBag.Category = await db.Categories.FindAsync(category);
 
-            return View(product);
+            return View(model);
         }
 
         // GET: Products/Edit/5
@@ -57,7 +66,7 @@ namespace Nettbutikk.Controllers.Admin
                 return HttpNotFound();
             }
 
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
+            ViewBag.Category = await db.Categories.FindAsync(product.Category.Name);
 
             return View(product);
         }
@@ -75,7 +84,7 @@ namespace Nettbutikk.Controllers.Admin
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Category = await db.Categories.FindAsync(product.CategoryId);
+            ViewBag.Category = await db.Categories.FindAsync(product.CategoryName);
 
             return View(product);
         }
