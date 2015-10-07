@@ -341,6 +341,12 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Password\" />
     <Folder Include="Views\Phone\" />
+    <Folder Include="Views\" />
+    <Folder Include="App_Start\" />
+    <Folder Include="Models\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
