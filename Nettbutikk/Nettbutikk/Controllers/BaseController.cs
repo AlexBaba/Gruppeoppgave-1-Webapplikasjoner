@@ -10,20 +10,28 @@ namespace Nettbutikk.Controllers
     [RequireHttps]
     public class BaseController : Controller
     {
+        /**
+         * A single db-context shared across all controllers.
+         * For ease of access.
+         */
         private NettbutikkContext _db = new NettbutikkContext();
         private SignInManager _signInManager;
         private UserManager _userManager;
+        /**
+         * Page title
+         */
+        private string title = "TankShop";
 
 
         // Used for XSRF protection when adding external logins
         protected const string XsrfKey = "${{Nettbutikk-XSRF-Key}}";
-
-
+        
         public BaseController()
         {
         }
 
         public BaseController(UserManager userManager, SignInManager signInManager)
+            : this()
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -40,6 +48,12 @@ namespace Nettbutikk.Controllers
             {
                 _db = value;
             }
+        }
+
+        protected string PageTitle
+        {
+            get { return ViewBag.Title; }
+            set { ViewBag.Title = title + " / " + value;  }
         }
 
         protected SignInManager SignInManager

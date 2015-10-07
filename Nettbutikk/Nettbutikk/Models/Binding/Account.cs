@@ -1,52 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Nettbutikk.Models.Bindings
+namespace Nettbutikk.Models.Binding
 {
-    public class ExternalAccountLoginVerification
+    public class ExternalAccounts
+    {
+        public IList<UserLoginInfo> CurrentLogins;
+        public IList<AuthenticationDescription> OtherLogins;
+    }
+
+    public class ExternalAccountLoginConfirmation
     {
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
-    public class ExternalLoginListViewModel
+    public class ExternalAccountLogin
     {
         public string ReturnUrl { get; set; }
     }
 
-    public class SendAccount2FACode
+    public class RegisterAccountSendCode
     {
+        [Required]
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
         public string ReturnUrl { get; set; }
+
+        [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }
 
-    public class AccountVerificationCode
+    public class VerifyAccountCode
     {
         [Required]
         public string Provider { get; set; }
 
         [Required]
-        [Display(Name = "Code")]
+        [Display(Name = "Code", Description = "The verification code you received.")]
         public string Code { get; set; }
         public string ReturnUrl { get; set; }
 
         [Display(Name = "Remember this browser?")]
         public bool RememberBrowser { get; set; }
 
+        [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }
-
-    public class ForgotViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
-
-    public class LoginViewModel
+    
+    public class AccountLogin
     {
         [Required]
         [Display(Name = "Email")]
@@ -62,7 +68,7 @@ namespace Nettbutikk.Models.Bindings
         public bool RememberMe { get; set; }
     }
 
-    public class AccountRegistration
+    public class RegisterAccount
     {
         [Required]
         [EmailAddress]
@@ -108,5 +114,87 @@ namespace Nettbutikk.Models.Bindings
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class SetAccountPassword
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+    public class ChangeAccountPassword
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current password")]
+        public string OldPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+    public class EditAccount
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+        
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+    public class RegisterAccountPhone
+    {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string Number;
+    }
+
+    public class VerifyAccountPhone
+    {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string Number;
+
+        [Required]
+        [Display(Name = "Your code")]
+        public string Code;
+    }
+
+    public class ManageAccount
+    {
+        public bool HasPassword;
+        public bool TwoFactor;
+        public IList<UserLoginInfo> Logins;
+        public bool BrowserRemembered;
+
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Add your (mobile) phone")]
+        public string PhoneNumber;
     }
 }

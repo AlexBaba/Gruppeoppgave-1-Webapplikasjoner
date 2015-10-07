@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using Nettbutikk.Models.Bindings;
+using Nettbutikk.Models.Binding;
 
 namespace Nettbutikk.Controllers.Account
 {

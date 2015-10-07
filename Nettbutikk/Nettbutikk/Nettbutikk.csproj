@@ -315,7 +315,7 @@
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_Login.cshtml" />
     <Content Include="Views\Address\Create.cshtml" />
     <Content Include="Views\Address\Delete.cshtml" />
     <Content Include="Views\Address\Details.cshtml" />
@@ -335,6 +335,11 @@
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Products\_SearchResults.cshtml" />
     <Content Include="Views\Products\_SearchResultRow.cshtml" />
+    <Content Include="Views\Shared\_CategoryList.cshtml" />
+    <Content Include="Views\Shared\_CategoriesPartial.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_LoginModal.cshtml" />
+    <Content Include="Views\Shared\_RegisterModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

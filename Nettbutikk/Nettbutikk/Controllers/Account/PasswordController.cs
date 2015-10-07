@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
-using Nettbutikk.Models.Bindings;
+using Nettbutikk.Models.Binding;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 

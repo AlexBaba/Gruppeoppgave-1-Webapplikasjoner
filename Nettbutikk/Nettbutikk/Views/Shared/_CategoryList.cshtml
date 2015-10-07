@@ -1,0 +1,7 @@
+﻿@using Nettbutikk.Models
+@model IEnumerable<Category>
+<ul>
+    @foreach (var category in Model) {
+        <li>@Html.ActionLink(category.Name, "Details", new { name = category.Name})</li>
+    }
+</ul>

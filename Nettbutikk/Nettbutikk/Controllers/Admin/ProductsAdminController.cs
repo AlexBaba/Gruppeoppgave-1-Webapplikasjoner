@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
 using Nettbutikk.Models;
-using Nettbutikk.Models.Bindings;
 using Nettbutikk.Models.Binding;
 
 namespace Nettbutikk.Controllers.Admin
@@ -33,7 +32,6 @@ namespace Nettbutikk.Controllers.Admin
             {
                 var product = new Product
                 {
-                    Id = model.Id,
                     Name = model.Name,
                     Description = model.Description,
                     Category = category
