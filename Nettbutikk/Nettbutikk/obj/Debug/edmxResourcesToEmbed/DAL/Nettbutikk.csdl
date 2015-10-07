@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Nettbutikk" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="NettbutikkContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Users" EntityType="Nettbutikk.User" />
+    <EntitySet Name="Products" EntityType="Nettbutikk.Product" />
+    <EntitySet Name="Categories" EntityType="Nettbutikk.Category" />
+    <EntitySet Name="Orders" EntityType="Nettbutikk.Order" />
+    <EntitySet Name="OrderLines" EntityType="Nettbutikk.OrderLine" />
+    <EntitySet Name="Addresses" EntityType="Nettbutikk.Address" />
+    <AssociationSet Name="ProductCategory" Association="Nettbutikk.ProductCategory">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="Category" EntitySet="Categories" />
+    </AssociationSet>
+    <AssociationSet Name="CategoryCategory" Association="Nettbutikk.CategoryCategory">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Category1" EntitySet="Categories" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerPrimaryShippingAddress" Association="Nettbutikk.CustomerPrimaryShippingAddress">
+      <End Role="Customer" EntitySet="Users" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerPrimaryBillingAddress" Association="Nettbutikk.CustomerPrimaryBillingAddress">
+      <End Role="Customer" EntitySet="Users" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerAddresses" Association="Nettbutikk.CustomerAddresses">
+      <End Role="Customer" EntitySet="Users" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerOrders" Association="Nettbutikk.CustomerOrders">
+      <End Role="Customer" EntitySet="Users" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="OrderOrderLine" Association="Nettbutikk.OrderOrderLine">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="OrderLine" EntitySet="OrderLines" />
+    </AssociationSet>
+    <AssociationSet Name="OrderLineProduct" Association="Nettbutikk.OrderLineProduct">
+      <End Role="OrderLine" EntitySet="OrderLines" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" Unicode="true" />
+    <Property Name="PasswordHash" Type="String" Nullable="false" />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer" BaseType="Nettbutikk.User">
+    <Property Name="Phone" Type="String" Nullable="false" Unicode="true" />
+    <NavigationProperty Name="PrimaryShippingAddress" Relationship="Nettbutikk.CustomerPrimaryShippingAddress" FromRole="Customer" ToRole="Address" />
+    <NavigationProperty Name="PrimaryBillingAddress" Relationship="Nettbutikk.CustomerPrimaryBillingAddress" FromRole="Customer" ToRole="Address" />
+    <NavigationProperty Name="Addresses" Relationship="Nettbutikk.CustomerAddresses" FromRole="Customer" ToRole="Address" />
+    <NavigationProperty Name="Orders" Relationship="Nettbutikk.CustomerOrders" FromRole="Customer" ToRole="Order" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Price" Type="String" Nullable="false" />
+    <Property Name="CategoryId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Categories" Relationship="Nettbutikk.ProductCategory" FromRole="Product" ToRole="Category" />
+  </EntityType>
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" Unicode="true" />
+    <Property Name="Description" Type="String" Nullable="false" Unicode="true" />
+    <NavigationProperty Name="ParentCategory" Relationship="Nettbutikk.CategoryCategory" FromRole="Category" ToRole="Category1" />
+  </EntityType>
+  <EntityType Name="Administrator" BaseType="Nettbutikk.User" />
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PlacementDateTime" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="Customer" Relationship="Nettbutikk.CustomerOrders" FromRole="Order" ToRole="Customer" />
+    <NavigationProperty Name="OrderLines" Relationship="Nettbutikk.OrderOrderLine" FromRole="Order" ToRole="OrderLine" />
+  </EntityType>
+  <EntityType Name="OrderLine">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Amount" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="Nettbutikk.OrderOrderLine" FromRole="OrderLine" ToRole="Order" />
+    <Property Name="OrderId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="Nettbutikk.OrderLineProduct" FromRole="OrderLine" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" cg:SetterAccess="Private" />
+  </EntityType>
+  <Association Name="ProductCategory">
+    <End Type="Nettbutikk.Product" Role="Product" Multiplicity="1" />
+    <End Type="Nettbutikk.Category" Role="Category" Multiplicity="*" />
+  </Association>
+  <Association Name="CategoryCategory">
+    <End Type="Nettbutikk.Category" Role="Category" Multiplicity="0..1" />
+    <End Type="Nettbutikk.Category" Role="Category1" Multiplicity="1" />
+  </Association>
+  <Association Name="CustomerPrimaryShippingAddress">
+    <End Type="Nettbutikk.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="Nettbutikk.Address" Role="Address" Multiplicity="0..1" />
+  </Association>
+  <Association Name="CustomerPrimaryBillingAddress">
+    <End Type="Nettbutikk.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="Nettbutikk.Address" Role="Address" Multiplicity="0..1" />
+  </Association>
+  <Association Name="CustomerAddresses">
+    <End Type="Nettbutikk.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="Nettbutikk.Address" Role="Address" Multiplicity="*" />
+  </Association>
+  <Association Name="CustomerOrders">
+    <End Type="Nettbutikk.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="Nettbutikk.Order" Role="Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OrderOrderLine">
+    <End Type="Nettbutikk.Order" Role="Order" Multiplicity="1" />
+    <End Type="Nettbutikk.OrderLine" Role="OrderLine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrderLine">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="OrderLineProduct">
+    <End Type="Nettbutikk.OrderLine" Role="OrderLine" Multiplicity="1" />
+    <End Type="Nettbutikk.Product" Role="Product" Multiplicity="1" />
+  </Association>
+</Schema>
