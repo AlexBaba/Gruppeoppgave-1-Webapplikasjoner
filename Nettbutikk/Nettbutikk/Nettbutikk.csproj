@@ -223,8 +223,8 @@
     <Compile Include="Controllers\Account\BaseController.cs" />
     <Compile Include="Controllers\Account\PasswordController.cs" />
     <Compile Include="Controllers\Account\PhoneController.cs" />
-    <Compile Include="Controllers\Admin\CategoriesController.cs" />
-    <Compile Include="Controllers\Admin\ProductsController.cs" />
+    <Compile Include="Controllers\Admin\CategoriesAdminController.cs" />
+    <Compile Include="Controllers\Admin\ProductsAdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -234,13 +234,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201510051103562_Initial.cs" />
-    <Compile Include="Migrations\201510051103562_Initial.Designer.cs">
-      <DependentUpon>201510051103562_Initial.cs</DependentUpon>
+    <Compile Include="Helpers\User.cs" />
+    <Compile Include="Migrations\201510061040500_Initial.cs" />
+    <Compile Include="Migrations\201510061040500_Initial.Designer.cs">
+      <DependentUpon>201510061040500_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
+    <Compile Include="Models\Binding\Category.cs" />
     <Compile Include="Models\Binding\Product.cs" />
     <Compile Include="Models\Binding\Search.cs" />
     <Compile Include="Models\Category.cs" />
@@ -349,8 +351,8 @@
     <Content Include="Scripts\jquery-2.1.4.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510051103562_Initial.resx">
-      <DependentUpon>201510051103562_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510061040500_Initial.resx">
+      <DependentUpon>201510061040500_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
