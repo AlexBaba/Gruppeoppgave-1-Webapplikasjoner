@@ -15,7 +15,7 @@ namespace Nettbutikk.Models
         }
 
         [Required]
-        public string Street
+        public string StreetName
         {
             get;
             set;
@@ -29,14 +29,7 @@ namespace Nettbutikk.Models
         }
 
         [Required]
-        public string ZipCode
-        {
-            get;
-            set;
-        }
-
-        [Required]
-        public string City
+        public virtual ZipCode ZipCode
         {
             get;
             set;
@@ -57,6 +50,7 @@ namespace Nettbutikk.Models
         }
         
         [Required]
+        [InverseProperty("Addresses")]
         public virtual User Addressee { get; set; }
     }
 }

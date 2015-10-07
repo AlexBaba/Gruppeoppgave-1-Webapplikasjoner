@@ -26,8 +26,11 @@ namespace Nettbutikk.Models
         
         public virtual Address PrimaryBillingAddress { get; set; }
 
+        public virtual CreditCard PaymentCard { get; set; }
+
         public virtual ICollection<Address> Addresses { get; set; }
 
+        [InverseProperty("Customer")]
         public virtual ICollection<Order> Orders { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)

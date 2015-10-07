@@ -247,11 +247,14 @@
     <Compile Include="Models\Binding\Product.cs" />
     <Compile Include="Models\Binding\Search.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CreditCard.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderLine.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Binding\Manage.cs" />
+    <Compile Include="Models\WebShopModel.cs" />
+    <Compile Include="Models\ZipCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -17,6 +17,7 @@ namespace Nettbutikk.Models
         public DateTime PlacementDateTime { get; set; }
         
         [Required]
+        [InverseProperty("Orders")]
         public virtual User Customer
         {
             get;

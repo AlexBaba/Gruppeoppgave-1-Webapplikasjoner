@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNet.Identity.EntityFramework;
 using Nettbutikk.Models;
+using System.Data.Entity;
 
 namespace Nettbutikk.DAL
 {
@@ -15,11 +16,14 @@ namespace Nettbutikk.DAL
         {
             return new NettbutikkContext();
         }
+        
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderLine> OrderLines { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ZipCode> ZipCodes { get; set; }
 
-        public System.Data.Entity.DbSet<Nettbutikk.Models.Address> Addresses { get; set; }
-
-        public System.Data.Entity.DbSet<Nettbutikk.Models.Product> Products { get; set; }
-
-        public System.Data.Entity.DbSet<Nettbutikk.Models.Category> Categories { get; set; }
     }
 }
