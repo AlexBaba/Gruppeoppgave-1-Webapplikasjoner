@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Nettbutikk
+namespace Oblig1_Nettbutikk
 {
     public class RouteConfig
     {
@@ -10,6 +10,7 @@ namespace Nettbutikk
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+<<<<<<< HEAD:Nettbutikk/Nettbutikk/App_Start/RouteConfig.cs
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
@@ -92,6 +93,12 @@ namespace Nettbutikk
                     action = "Index",
                     id = UrlParameter.Optional
                 }
+=======
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+>>>>>>> origin/magnus:Oblig1_Nettbutikk/Oblig1_Nettbutikk/App_Start/RouteConfig.cs
             );
         }
     }
