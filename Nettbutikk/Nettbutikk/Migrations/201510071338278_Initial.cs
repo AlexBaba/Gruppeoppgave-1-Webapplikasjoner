@@ -12,20 +12,18 @@ namespace Nettbutikk.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
-                        Street = c.String(nullable: false),
+                        StreetName = c.String(nullable: false),
                         HouseNumber = c.String(nullable: false),
-                        ZipCode = c.String(nullable: false),
-                        City = c.String(nullable: false),
                         State = c.String(nullable: false),
                         Country = c.String(nullable: false),
-                        User_Id = c.String(maxLength: 128),
                         Addressee_Id = c.String(nullable: false, maxLength: 128),
+                        ZipCode_Code = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.User_Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.Addressee_Id, cascadeDelete: false)
-                .Index(t => t.User_Id)
-                .Index(t => t.Addressee_Id);
+                .ForeignKey("dbo.ZipCodes", t => t.ZipCode_Code, cascadeDelete: false)
+                .Index(t => t.Addressee_Id)
+                .Index(t => t.ZipCode_Code);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -43,13 +41,16 @@ namespace Nettbutikk.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
+                        PaymentCard_Number = c.String(maxLength: 128),
                         PrimaryBillingAddress_Id = c.Guid(),
                         PrimaryShippingAddress_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.CreditCards", t => t.PaymentCard_Number)
                 .ForeignKey("dbo.Addresses", t => t.PrimaryBillingAddress_Id)
                 .ForeignKey("dbo.Addresses", t => t.PrimaryShippingAddress_Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex")
+                .Index(t => t.PaymentCard_Number)
                 .Index(t => t.PrimaryBillingAddress_Id)
                 .Index(t => t.PrimaryShippingAddress_Id);
             
@@ -118,6 +119,7 @@ namespace Nettbutikk.Migrations
                         Name = c.String(maxLength: 128),
                         Price = c.Single(nullable: false),
                         Description = c.String(),
+                        Stock = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Categories", t => t.Name)
@@ -136,6 +138,18 @@ namespace Nettbutikk.Migrations
                 .Index(t => t.ParentCategory_Name);
             
             CreateTable(
+                "dbo.CreditCards",
+                c => new
+                    {
+                        Number = c.String(nullable: false, maxLength: 128),
+                        NameOnCard = c.String(),
+                        CCV = c.String(),
+                        ExpireYear = c.String(),
+                        ExpireMonth = c.String(),
+                    })
+                .PrimaryKey(t => t.Number);
+            
+            CreateTable(
                 "dbo.AspNetUserRoles",
                 c => new
                     {
@@ -147,6 +161,15 @@ namespace Nettbutikk.Migrations
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.ZipCodes",
+                c => new
+                    {
+                        Code = c.String(nullable: false, maxLength: 128),
+                        City = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Code);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -163,10 +186,12 @@ namespace Nettbutikk.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.Addresses", "ZipCode_Code", "dbo.ZipCodes");
             DropForeignKey("dbo.Addresses", "Addressee_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUsers", "PrimaryShippingAddress_Id", "dbo.Addresses");
             DropForeignKey("dbo.AspNetUsers", "PrimaryBillingAddress_Id", "dbo.Addresses");
+            DropForeignKey("dbo.AspNetUsers", "PaymentCard_Number", "dbo.CreditCards");
             DropForeignKey("dbo.Orders", "ShippingAddress_Id", "dbo.Addresses");
             DropForeignKey("dbo.OrderLines", "Product_Id", "dbo.Products");
             DropForeignKey("dbo.Products", "Name", "dbo.Categories");
@@ -176,7 +201,6 @@ namespace Nettbutikk.Migrations
             DropForeignKey("dbo.Orders", "BillingAddress_Id", "dbo.Addresses");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Addresses", "User_Id", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
@@ -191,11 +215,14 @@ namespace Nettbutikk.Migrations
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", new[] { "PrimaryShippingAddress_Id" });
             DropIndex("dbo.AspNetUsers", new[] { "PrimaryBillingAddress_Id" });
+            DropIndex("dbo.AspNetUsers", new[] { "PaymentCard_Number" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.Addresses", new[] { "ZipCode_Code" });
             DropIndex("dbo.Addresses", new[] { "Addressee_Id" });
-            DropIndex("dbo.Addresses", new[] { "User_Id" });
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.ZipCodes");
             DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.CreditCards");
             DropTable("dbo.Categories");
             DropTable("dbo.Products");
             DropTable("dbo.OrderLines");
