@@ -1,14 +1,16 @@
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Nettbutikk.DAL;
+using Nettbutikk.Models;
+using System;
+using System.Data.Entity.Migrations;
+using System.Linq;
+
 namespace Nettbutikk.Migrations
 {
-    using DAL;
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using Models;
-    using System;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<NettbutikkContext>
+    internal sealed class Configuration
+        : DbMigrationsConfiguration<NettbutikkContext>
     {
         public Configuration()
         {
@@ -18,49 +20,39 @@ namespace Nettbutikk.Migrations
 
         protected override void Seed(NettbutikkContext db)
         {
-            if (!(db.Users.Any(u => u.UserName == "admin@example.com")))
+            if (!(db.Users.Any(
+                user => user.Roles.Any(
+                    role => role.RoleId == "Administrator"))))
             {
-                var userStore = new UserStore<User>(db);
-                var userManager = new UserManager<User>(userStore);
-                var roleStore = new RoleStore<IdentityRole>(db);
-                var roleManager = new RoleManager<IdentityRole>(roleStore);
-
-                var user = new User
-                {
-                    UserName = "admin@example.com",
-                    PhoneNumber = "9876543210",
-                    Email = "admin@example.com",
-                    EmailConfirmed = true
-                };
-
-                userManager.Create(user, "password");
-
-                db.SaveChanges();
-
-                user = userManager.FindById(user.Id);
-                
-                if(!roleManager.RoleExists("Administrator"))
-                {
-                    roleManager.Create(new IdentityRole("Administrator"));
-
-                    userManager.AddToRole(user.Id, "Administrator");
-                }
+                CreateAdministrator(db);
             }
 
-            var tanks = new Category { Name = "Tanks", Description = "Tanks" };
-            var cannons = new Category { Name = "Cannons", Description = "Cannons" };
-            var engines = new Category { Name = "Engines", Description = "Engines" };
-            
             // main categories.
-            db.Categories.Add(tanks);
-            db.Categories.Add(cannons);
-            db.Categories.Add(engines);
+            var tanks = new Category
+            {
+                Name = "Tanks",
+                Description = "Tanks",
+                ParentCategory = null
+            };
+
+            var cannons = new Category
+            {
+                Name = "Cannons",
+                Description = "Cannons",
+                ParentCategory = null
+            };
+
+            var engines = new Category
+            {
+                Name = "Engines",
+                Description = "Engines",
+                ParentCategory = null
+            };
+            
+            db.Categories.AddOrUpdate(tanks, cannons, engines);
 
             db.SaveChanges();
-
-            tanks = db.Categories.Find("Tanks");
-            engines = db.Categories.Find("Engines");
-            cannons = db.Categories.Find("Cannons");
+            
 
             db.Categories.AddOrUpdate(c => c.Name,
                 new Category
@@ -88,7 +80,7 @@ namespace Nettbutikk.Migrations
                     ParentCategory = tanks
                 }
             );
-
+            
             db.Categories.AddOrUpdate(c => c.Name,
                 new Category
                 {
@@ -146,7 +138,7 @@ namespace Nettbutikk.Migrations
             Func<float> randomPriceGenerator = () =>
             {
                 Random random = new Random();
-                return (float)(((random.NextDouble() * 2.0) - 1.0) * (Math.Pow(2.0, random.Next(-126, 128))));
+                return (float)((random.NextDouble() * 2.0) * (Math.Pow(2.0, random.Next(10, 40))));
             };
             var us_tanks = db.Categories.Find("US Tanks");
             db.Products.AddOrUpdate(p => p.Name,
@@ -347,6 +339,35 @@ namespace Nettbutikk.Migrations
                     Category = german_cannons
                 }
             );
+        }
+
+        private void CreateAdministrator(NettbutikkContext db)
+        {
+            var userStore = new UserStore<User>(db);
+            var userManager = new UserManager<User>(userStore);
+            var roleStore = new RoleStore<IdentityRole>(db);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+            var user = new User
+            {
+                UserName = "admin@example.com",
+                PhoneNumber = "9876543210",
+                Email = "admin@example.com",
+                EmailConfirmed = true
+            };
+
+            userManager.Create(user, "password");
+
+            db.SaveChanges();
+
+            user = userManager.FindById(user.Id);
+
+            if (!roleManager.RoleExists("Administrator"))
+            {
+                roleManager.Create(new IdentityRole("Administrator"));
+
+                userManager.AddToRole(user.Id, "Administrator");
+            }
         }
     }
 }
