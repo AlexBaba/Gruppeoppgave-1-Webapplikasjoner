@@ -2,15 +2,14 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Oblig1_Nettbutikk
+namespace Nettbutikk
 {
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-<<<<<<< HEAD:Nettbutikk/Nettbutikk/App_Start/RouteConfig.cs
+            
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
@@ -93,12 +92,12 @@ namespace Oblig1_Nettbutikk
                     action = "Index",
                     id = UrlParameter.Optional
                 }
-=======
+            );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
->>>>>>> origin/magnus:Oblig1_Nettbutikk/Oblig1_Nettbutikk/App_Start/RouteConfig.cs
             );
         }
     }
