@@ -1,4 +1,6 @@
-﻿<div class="header">
+﻿@using Nettbutikk.Models.Binding
+@using Nettbutikk.Helpers
+<div class="header">
     <div class="container">
         <div class="header_logo">
             logo
@@ -8,11 +10,11 @@
         </div>
         <div class="header_options">
             <div class="header_login">
-                @if (!ViewBag.LoggedIn)
+                @if (!User.Identity.IsAuthenticated)
                 {
-                <a href="#LoginModal" data-toggle="modal" >Logg inn</a> 
+                @AccountsHelper.LoginLink(Html)
                 <span> | </span>
-                <a href="#RegisterModal" data-toggle="modal">Register</a>
+                @AccountsHelper.RegisterLink(Html)
                 }
                 else
                 {
@@ -20,7 +22,7 @@
                     <span> | </span>
                     @Html.ActionLink("Logg ut", "Logout", "Account")
                     <span> | </span>
-                    @Html.ActionLink("Min side", "MyPage", "Account")
+                    @Html.ActionLink("Min side", "Details", "Account")
                 }
             </div>
             <div class="header_shop">
@@ -31,7 +33,7 @@
         </div>
     </div>
 </div>
-@Html.Partial("_LoginModal")
+@Html.Partial("_LoginModal", new AccountLogin())
 @Html.Partial("_RegisterModal")
 
 
