@@ -1,0 +1,11 @@
+﻿@using Nettbutikk.Models
+@model IEnumerable<Product>
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Search</h2>
+
+@RenderPage("Products/_SearchResults.cshtml", Model);

@@ -1,25 +1,36 @@
-﻿using Nettbutikk.Models;
+using Nettbutikk.Models;
+using Nettbutikk.Models.Binding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
-            ViewBag.LoggedIn = false;
-            if(Session["LoggedIn"] != null)
-            {
-                ViewBag.LoggedIn = (bool)(Session["LoggedIn"]);
-            }
+            return View();
+        }
 
-            List<Category> categories = DB.AllCategories();
-            ViewBag.Categories = categories;
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
 
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+
+        public ActionResult Search(Search search)
+        {
             return View();
         }
     }
