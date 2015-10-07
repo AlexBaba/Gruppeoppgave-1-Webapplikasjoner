@@ -6,20 +6,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Nettbutikk.Models
 {   
     public partial class Category
-    {   
+    {
+        private string name;
+
         public Category()
         {
             this.Products = new HashSet<Product>();
         }
         
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         [Required]
         public string Name
         {
-            get;
-            set;
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+            }
         }
 
         [Required]
@@ -32,5 +40,10 @@ namespace Nettbutikk.Models
         public virtual Category ParentCategory { get; set; }
         
         public virtual ICollection<Product> Products { get; set; }
+
+        public new string ToString()
+        {
+            return "<" + GetType().FullName + " Name=\"" + Name + "\"," + " Description=\"" + Description + "\", " + " ParentCategory=\"" + ParentCategory.Name + "\">";
+        }
     }
 }
