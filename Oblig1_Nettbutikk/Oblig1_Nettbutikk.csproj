@@ -207,7 +207,6 @@
     <Content Include="Views\Shared\_RegisterModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\Products\" />
     <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
