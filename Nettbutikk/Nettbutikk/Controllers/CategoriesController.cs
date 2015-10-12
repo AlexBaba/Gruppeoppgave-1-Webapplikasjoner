@@ -16,13 +16,15 @@ namespace Nettbutikk.Controllers
         }
 
         // GET: Categories/Details/5
-        public async Task<ActionResult> Details(Guid? id)
+        public async Task<ActionResult> Details(string name)
         {
-            if (id == null)
+            if (name == null || name.Length < 1)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+
+            Category category = await db.Categories.FindAsync(name);
+
             if (category == null)
             {
                 return HttpNotFound();

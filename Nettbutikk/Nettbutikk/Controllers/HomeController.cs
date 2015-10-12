@@ -1,6 +1,5 @@
 ﻿using Nettbutikk.Models.Binding;
 using System.Web.Mvc;
-using System.Linq;
 
 namespace Nettbutikk.Controllers
 {
@@ -8,8 +7,7 @@ namespace Nettbutikk.Controllers
     {
         public ActionResult Index()
         {
-            // Only show main-categories, not subcategories.
-            return View(db.Categories.Where(c => c.ParentCategory == null).AsEnumerable());
+            return View();
         }
 
         public ActionResult About()

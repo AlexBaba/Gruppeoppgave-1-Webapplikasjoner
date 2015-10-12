@@ -2,6 +2,9 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.DAL;
+using Nettbutikk.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -37,7 +40,6 @@ namespace Nettbutikk.Controllers
             SignInManager = signInManager;
         }
 
-
         protected NettbutikkContext db
         {
             get
@@ -48,6 +50,11 @@ namespace Nettbutikk.Controllers
             {
                 _db = value;
             }
+        }
+
+        public IEnumerable<Category> MainCategories()
+        {
+            return db.Categories.Where(c => c.ParentCategory == null).AsEnumerable();
         }
 
         protected string PageTitle
