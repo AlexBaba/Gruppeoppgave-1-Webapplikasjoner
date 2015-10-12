@@ -2,7 +2,7 @@
 
 namespace Nettbutikk.Helpers
 {
-    public class User
+    public class UserHelper
     {
         public static bool CanAccess(IPrincipal user, string[] acceptedRoles)
         {

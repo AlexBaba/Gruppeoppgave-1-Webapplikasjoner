@@ -16,7 +16,7 @@ namespace Nettbutikk.Helpers
 
         private static object routeData = new
         {
-            controller = "Accounts"
+            controller = "Account"
         };
 
         private static MvcHtmlString Link(this HtmlHelper html, string linkText, string actionName)
@@ -37,6 +37,11 @@ namespace Nettbutikk.Helpers
         public static MvcHtmlString RegisterLink(this HtmlHelper html)
         {
             return Link(html, "Register", "Register");
+        }
+
+        public static MvcHtmlString HomeLink(this HtmlHelper html)
+        {
+            return Link(html, "Account", "Index");
         }
     }
 }
