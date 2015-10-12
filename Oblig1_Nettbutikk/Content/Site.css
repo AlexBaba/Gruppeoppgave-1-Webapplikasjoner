@@ -43,7 +43,7 @@ textarea {
     background:lightgrey;
 }
 
-.header *{
+.header, .header_logo, .header_logo img, .header_search, .header_options{
     position:relative;
     height:90px;
 
@@ -154,16 +154,23 @@ textarea {
 
 /* Search */
 .searchfield{
+    position:absolute;
+    width:50%;
+    height:40%;
+    bottom:0; top:0;
+    left:0;right:0;
+    margin:auto;
     
 }
 
-.searchfield input{
+.search_icon{
     position:absolute;
-    left:0;right:0;
-    top:0;bottom:0;
-    margin:auto;
-    padding:0 15px;
-    height:40%;
-    width:50%;
-    background:white;
+    line-height:32px;
+    font-size:1.1em;
+}
+
+.searchfield input{
+   position:absolute;
+   left:0;right:0;
+   top:0;bottom:0;margin:auto;
 }
