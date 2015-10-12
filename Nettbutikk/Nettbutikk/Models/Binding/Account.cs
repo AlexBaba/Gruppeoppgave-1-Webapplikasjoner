@@ -32,7 +32,7 @@ namespace Nettbutikk.Models.Binding
         public string ReturnUrl { get; set; }
 
         [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
+        public bool? RememberMe { get; set; }
     }
 
     public class VerifyAccountCode
