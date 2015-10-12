@@ -230,12 +230,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Account\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Helpers\AccountsHelper.cs" />
+    <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Infrastructure\Routes\Constraints.Guid.cs" />
     <Compile Include="DataAccessLayer\NettbutikkContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\User.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Migrations\201510071338278_Initial.cs" />
     <Compile Include="Migrations\201510071338278_Initial.Designer.cs">
       <DependentUpon>201510071338278_Initial.cs</DependentUpon>
@@ -336,7 +338,6 @@
     <Content Include="Views\Products\_SearchResults.cshtml" />
     <Content Include="Views\Products\_SearchResultRow.cshtml" />
     <Content Include="Views\Shared\_CategoryList.cshtml" />
-    <Content Include="Views\Shared\_CategoriesPartial.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_LoginModal.cshtml" />
     <Content Include="Views\Shared\_RegisterModal.cshtml" />
