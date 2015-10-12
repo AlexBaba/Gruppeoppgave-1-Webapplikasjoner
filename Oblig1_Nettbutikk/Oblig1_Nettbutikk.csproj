@@ -140,6 +140,14 @@
     <Compile Include="Migrations\201510101342469_InitialCreate.Designer.cs">
       <DependentUpon>201510101342469_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510112356463_ImageURL.cs" />
+    <Compile Include="Migrations\201510112356463_ImageURL.Designer.cs">
+      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510112359399_ImageURL2.cs" />
+    <Compile Include="Migrations\201510112359399_ImageURL2.Designer.cs">
+      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomerLoginPartial.cs" />
     <Compile Include="Models\CustomerRegisterPartial.cs" />
@@ -209,6 +217,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201510101342469_InitialCreate.resx">
       <DependentUpon>201510101342469_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510112356463_ImageURL.resx">
+      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510112359399_ImageURL2.resx">
+      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

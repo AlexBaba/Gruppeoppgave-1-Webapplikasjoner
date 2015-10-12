@@ -125,6 +125,7 @@ namespace Oblig1_Nettbutikk.Models
         public double Price { get; set; }
         public int Stock { get; set; }
         public string Description { get; set; }
+        public string ImageURL { get; set; }
         public List<Image> Images { get; set; }
 
         public virtual Category Category { get; set; }
@@ -178,8 +179,9 @@ namespace Oblig1_Nettbutikk.Models
     {
         [Key]
         public int ImageID { get; set; }
-        public Product ProductID { get; set; }
-        public byte[] Imagebytes { get; set; }
+        public string ImageURL { get; set; }
+
+        public virtual Product ProductID { get; set; }
     }
 
 }
