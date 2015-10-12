@@ -2,6 +2,6 @@
 @model IEnumerable<Category>
 <ul>
     @foreach (var category in Model) {
-        <li>@Html.ActionLink(category.Name, "Details", new { name = category.Name})</li>
+        <li>@Html.ActionLink(category.Name, category.Name, new { controller = "categories"})</li>
     }
 </ul>

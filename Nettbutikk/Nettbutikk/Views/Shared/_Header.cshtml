@@ -2,27 +2,23 @@
 @using Nettbutikk.Helpers
 <div class="header">
     <div class="container">
-        <div class="header_logo">
+        <div class="header-logo">
             logo
         </div>
-        <div class="header_search">
+        <div class="header-search">
             search
         </div>
-        <div class="header_options">
-            <div class="header_login">
-                @if (!User.Identity.IsAuthenticated)
-                {
-                @AccountsHelper.LoginLink(Html)
-                <span> | </span>
-                @AccountsHelper.RegisterLink(Html)
+        <div class="header-options">
+            <div class="header-login">
+                @if (!User.Identity.IsAuthenticated) {
+                    @AccountsHelper.LoginLink(Html);
+                    @AccountsHelper.RegisterLink(Html);
                 }
                 else
                 {
-                    <span style="color:forestgreen">Logget inn</span>
-                    <span> | </span>
-                    @Html.ActionLink("Logg ut", "Logout", "Account")
-                    <span> | </span>
-                    @Html.ActionLink("Min side", "Details", "Account")
+                    <span class="login-link" style="color:forestgreen">Logget inn som @User.Identity.Name</span>
+                    @AccountsHelper.LogoutLink(Html)
+                    @AccountsHelper.HomeLink(Html)
                 }
             </div>
             <div class="header_shop">
@@ -34,6 +30,6 @@
     </div>
 </div>
 @Html.Partial("_LoginModal", new AccountLogin())
-@Html.Partial("_RegisterModal")
+@Html.Partial("_RegisterModal", new RegisterAccount())
 
 
