@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -253,6 +254,14 @@
     <Compile Include="Migrations\201510071338278_Initial.Designer.cs">
       <DependentUpon>201510071338278_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510112356463_ImageURL.cs" />
+    <Compile Include="Migrations\201510112356463_ImageURL.Designer.cs">
+      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510112359399_ImageURL2.cs" />
+    <Compile Include="Migrations\201510112359399_ImageURL2.Designer.cs">
+      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
@@ -370,8 +379,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510071338278_Initial.resx">
-      <DependentUpon>201510071338278_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510101342469_InitialCreate.resx">
+      <DependentUpon>201510101342469_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510112356463_ImageURL.resx">
+      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510112359399_ImageURL2.resx">
+      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
