@@ -14,7 +14,7 @@ namespace Nettbutikk
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<WebShopModel>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DAL.NettbutikkContext>());
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

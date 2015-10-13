@@ -1,0 +1,35 @@
+﻿@using Nettbutikk.Models.Binding
+@using Nettbutikk.Helpers
+<div class="header">
+    <div class="container">
+        <div class="header-logo">
+            logo
+        </div>
+        <div class="header-search">
+            search
+        </div>
+        <div class="header-options">
+            <div class="header-login">
+                @if (!User.Identity.IsAuthenticated) {
+                    @AccountsHelper.LoginLink(Html);
+                    @AccountsHelper.RegisterLink(Html);
+                }
+                else
+                {
+                    <span class="login-link" style="color:forestgreen">Logget inn som @User.Identity.Name</span>
+                    @AccountsHelper.LogoutLink(Html)
+                    @AccountsHelper.HomeLink(Html)
+                }
+            </div>
+            <div class="header_shop">
+                <div class="header_shoppingcart">Handlekurv</div>
+                <div class="header_checkout">Til kassen</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@Html.Partial("_LoginModal", new AccountLogin())
+@Html.Partial("_RegisterModal", new RegisterAccount())
+
+

@@ -16,20 +16,18 @@ namespace Nettbutikk.Models
         private ICollection<Address> addresses;
         private ICollection<Order> orders;
         
-        public User()
-        {
-            addresses = new HashSet<Address>();
-            orders = new HashSet<Order>();
-        }
         
         public virtual Address PrimaryShippingAddress { get; set; }
         
         public virtual Address PrimaryBillingAddress { get; set; }
 
+        public virtual CreditCard PaymentCard { get; set; }
+
         public virtual ICollection<Address> Addresses { get; set; }
-
+        
+        [InverseProperty("Customer")]
         public virtual ICollection<Order> Orders { get; set; }
-
+        
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

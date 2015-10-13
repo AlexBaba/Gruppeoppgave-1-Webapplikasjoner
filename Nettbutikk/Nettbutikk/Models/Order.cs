@@ -15,8 +15,9 @@ namespace Nettbutikk.Models
         public Guid Id { get; set; }
         
         public DateTime PlacementDateTime { get; set; }
-        
+
         [Required]
+        [InverseProperty("Orders")]
         public virtual User Customer
         {
             get;

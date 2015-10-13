@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.Models;
-using Nettbutikk.Models.Bindings;
+using Nettbutikk.Models.Binding;
 
 namespace Nettbutikk.Controllers
 {
@@ -25,7 +25,7 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(AccountLogin model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace Nettbutikk.Controllers
             {
                 return View("Error");
             }
-            return View(new AccountVerificationCode { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            return View(new VerifyAccountCode { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         //
@@ -68,7 +68,7 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(AccountVerificationCode model)
+        public async Task<ActionResult> VerifyCode(VerifyAccountCode model)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +106,7 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(AccountRegistration accountRegistration)
+        public async Task<ActionResult> Register(RegisterAccount accountRegistration)
         {
             if (ModelState.IsValid)
             {
@@ -253,7 +253,7 @@ namespace Nettbutikk.Controllers
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendAccount2FACode { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            return View(new RegisterAccountSendCode { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         //
@@ -261,7 +261,7 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SendCode(SendAccount2FACode model)
+        public async Task<ActionResult> SendCode(RegisterAccountSendCode model)
         {
             if (!ModelState.IsValid)
             {
@@ -302,7 +302,7 @@ namespace Nettbutikk.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalAccountLoginVerification { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation", new ExternalAccountLoginConfirmation { Email = loginInfo.Email });
             }
         }
 
@@ -311,7 +311,7 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalAccountLoginVerification model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalAccountLoginConfirmation model, string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {

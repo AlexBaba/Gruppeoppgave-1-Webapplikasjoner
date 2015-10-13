@@ -2,6 +2,9 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.DAL;
+using Nettbutikk.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,36 +13,54 @@ namespace Nettbutikk.Controllers
     [RequireHttps]
     public class BaseController : Controller
     {
+        /**
+         * A single db-context shared across all controllers.
+         * For ease of access.
+         */
         private NettbutikkContext _db = new NettbutikkContext();
         private SignInManager _signInManager;
         private UserManager _userManager;
+        /**
+         * Page title
+         */
+        private string title = "TankShop";
 
 
         // Used for XSRF protection when adding external logins
         protected const string XsrfKey = "${{Nettbutikk-XSRF-Key}}";
-
-
+        
         public BaseController()
         {
         }
 
         public BaseController(UserManager userManager, SignInManager signInManager)
+            : this()
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
-
 
         protected NettbutikkContext db
         {
             get
             {
                 return _db ?? (_db = NettbutikkContext.Create());
-            }
+        }
             private set
             {
                 _db = value;
             }
+        }
+
+        public IEnumerable<Category> MainCategories()
+        {
+            return db.Categories.Where(c => c.ParentCategory == null).AsEnumerable();
+        }
+
+        protected string PageTitle
+        {
+            get { return ViewBag.Title; }
+            set { ViewBag.Title = title + " / " + value;  }
         }
 
         protected SignInManager SignInManager
@@ -51,7 +72,7 @@ namespace Nettbutikk.Controllers
             private set
             {
                 _signInManager = value;
-            }
+        }
         }
 
         protected UserManager UserManager
@@ -85,13 +106,13 @@ namespace Nettbutikk.Controllers
                 }
 
                 if (_signInManager != null)
-                {
+        {
                     _signInManager.Dispose();
                     _signInManager = null;
                 }
 
                 if (disposing)
-                {
+            {
                     _db.Dispose();
                 }
             }
