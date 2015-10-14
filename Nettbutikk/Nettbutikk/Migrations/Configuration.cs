@@ -19,7 +19,10 @@
 
         protected override void Seed(NettbutikkContext db)
         {
-            if(db.Users.Any(user => user.Roles.Contains(new IdentityUserRole)))
+            if (db.Users.Count() < 1)
+            {
+                
+            }
 
             db.Categories.AddOrUpdate(new Category
             {
