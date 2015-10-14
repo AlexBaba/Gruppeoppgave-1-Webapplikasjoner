@@ -248,9 +248,6 @@
                 CategoryId = 3,
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/0/09/85_mm_air_defense_gun_M1939_(52-K)_11.jpg"
             });
-
-
-
         }
     }
 
