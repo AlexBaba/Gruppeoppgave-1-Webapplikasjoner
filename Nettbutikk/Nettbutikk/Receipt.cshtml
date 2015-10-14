@@ -1,0 +1,187 @@
+﻿@{
+    Layout = null;
+}
+
+@using Local_Nettbutikk.DAL;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+   <h1>Receipt</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produkt Id</th>
+                <th>Navn</th>
+                <th>Pris</th>
+                <th>Antall</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                var cartSizeCookie = CookieHandler.getCookie(CookieHandler.CART_SIZE_COOKIE);
+
+
+                double totalPrice = 0;
+
+
+                if (cartSizeCookie == null)
+                {
+                    return;
+                }
+
+
+                var db = new NettbutikkEntities();
+                int elements = Convert.ToInt32(cartSizeCookie.Value);
+
+                for (int i = 1; i <= elements; i++)
+                {
+                    string current = Convert.ToString(i);
+                    HttpCookie productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
+
+                    string[] values = CookieHandler.getCookieValues(productCookie);
+
+                    if (values[0] == null || values[1] == null)
+                    {
+                        continue;
+                    }
+
+                    Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
+
+                    totalPrice += p.Pris * Convert.ToInt32(values[1]);
+
+                    <tr>
+                        <td>
+                            @p.ProduktId
+                        </td>
+                        <td>
+                            @p.Navn
+                        </td>
+                        <td>
+                            @p.Pris
+                        </td>
+                        <td>
+                            @values[1]
+                        </td>
+                    </tr>
+                }
+
+            }
+
+        </tbody>
+    </table>
+
+    <p>Total pris: @totalPrice kr</p>
+
+
+    @{ 
+        //Send order to database
+
+        if (Session["User"] == null)
+        {
+            System.Diagnostics.Debug.WriteLine("No user found!");
+            <h1>User is not logged in, and cannot place orders</h1>
+            return;
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("Logged in as: " + Session["User"].ToString());
+        }
+
+        System.Diagnostics.Debug.WriteLine("Adding ordre to database");
+
+        Ordre ordre = new Ordre();
+
+        int ordreId = db.Ordre.ToArray().Length;
+
+        ordre.OrdreId = ordreId;
+
+        //Bruk login email til å finne kundeId
+
+        string email = Session["User"].ToString();
+
+        //In case no id is found
+        //Remove this in later versions
+        ordre.KundeId = 0;
+
+        foreach (Person p in db.Person.ToList())
+        {
+            if (email == p.Email)
+            {
+                foreach (Kunde k in db.Kunde.ToList())
+                {
+                    if (p.PersonId == k.PersonId)
+                    {
+                        ordre.KundeId = k.KundeId;
+                    }
+                }
+            }
+        }
+
+        ordre.Dato = DateTime.Now;
+
+        db.Ordre.Add(ordre);
+        db.SaveChanges();
+
+        System.Diagnostics.Debug.WriteLine("Ordre was added");
+
+        //Legg til alle bestillinger som tilhører denne orderen
+
+        System.Diagnostics.Debug.WriteLine("Adding bestillinger to database");
+
+        int bestillingId = db.Bestilling.ToArray().Length;
+
+        for (int i = 1; i <= elements; i++)
+        {
+            string current = Convert.ToString(i);
+            HttpCookie productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
+
+            string[] values = CookieHandler.getCookieValues(productCookie);
+
+            if (values[0] == null || values[1] == null)
+            {
+                continue;
+            }
+
+            Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
+
+            Bestilling produktBestilling = new Bestilling();
+            produktBestilling.BestillingId = bestillingId++;
+            produktBestilling.OrdreId = ordreId;
+            produktBestilling.ProduktId = p.ProduktId;
+            produktBestilling.Antall = (short)Convert.ToInt32(values[1]);
+
+            db.Bestilling.Add(produktBestilling);
+
+        }
+
+        db.SaveChanges();
+
+        System.Diagnostics.Debug.WriteLine("Bestillinger was added to database");
+
+        <h1>The order has been sent</h1>
+
+        //Remove all elements from the cart
+        for (int i = 1; i <= elements; i++)
+        {
+            string current = Convert.ToString(i);
+            System.Diagnostics.Debug.WriteLine("Deleting cookie: " + current);
+            CookieHandler.deleteCookie(CookieHandler.getCookie(CookieHandler.PRODUCT + current));
+        }
+
+        System.Diagnostics.Debug.WriteLine("Delete cart size cookie");
+        CookieHandler.deleteCookie(cartSizeCookie);
+
+    }
+
+
+
+</body>
+</html>

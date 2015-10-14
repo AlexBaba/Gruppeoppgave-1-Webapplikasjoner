@@ -1,0 +1,216 @@
+﻿@{
+    Layout = null;
+
+}
+
+@using Local_Nettbutikk.DAL;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/js-cookie.js"></script>
+
+    <script>
+
+        function updateCartProduct(cartProductId) {
+
+            var spinnerId = "#spinner" + cartProductId;
+            var newQuantity = $(spinnerId + " option:selected").text();
+
+            var cookieStr = Cookies.get('product' + cartProductId);
+
+            var oldQuantity = cookieStr.substring(cookieStr.indexOf("&") + 1);
+
+            cookieStr = cookieStr.replace(oldQuantity, newQuantity);
+
+            Cookies.set('product' + cartProductId, cookieStr, { expires: 1 });
+
+            location.reload(true);
+        }
+
+        function removeCartProduct(cartProductId,containerId) {
+
+            var cartSizeCookieStr = Cookies.get('cart_size');
+            var cartSize = parseInt(cartSizeCookieStr);
+
+            for (i = cartProductId; i < cartSize; i++) {
+
+                var nextProductCookieStr = Cookies.get('product' + (i + 1));
+
+                Cookies.set('product' + i, nextProductCookieStr, { expires: 1 });
+
+            }
+
+            Cookies.remove('product' + cartSize);
+
+            var newSize = cartSize - 1;
+
+            if (newSize <= 0) {
+                Cookies.remove('cart_size');
+            } else {
+                Cookies.set('cart_size', newSize, { expires: 1 });
+            }
+
+            /*
+            //Remove item container
+            divId = "#itemContainer" + containerId;
+            $(divId).remove();
+            */
+
+            location.reload(true);
+
+        }
+
+    </script>
+
+</head>
+<body>
+    @{
+        var cartSizeCookie = CookieHandler.getCookie(CookieHandler.CART_SIZE_COOKIE);
+
+        if (cartSizeCookie == null)
+        {
+            return;
+        }
+
+        double totalPris = 0;
+        var db = new NettbutikkEntities();
+        int elements = Convert.ToInt32(cartSizeCookie.Value);
+
+        for (int i = 1; i <= elements; i++)
+        {
+            string current = Convert.ToString(i);
+            HttpCookie productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
+
+            string[] values = CookieHandler.getCookieValues(productCookie);
+
+            if (values[0] == null || values[1] == null)
+            {
+                continue;
+            }
+
+            Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
+
+            totalPris += p.Pris * Convert.ToInt32(values[1]);
+        }
+    }
+
+    <div class="row" style="padding-left: 40px; padding-top: 40px; padding-right: 40px;">
+        <div class="col-md-8" style="border: 2px solid #ddd; border-radius: 10px;">
+            <h2>Shopping cart</h2>
+            <hr />
+
+            @{
+                //Loop over all the cart elements and add a div for each of them
+                cartSizeCookie = CookieHandler.getCookie(CookieHandler.CART_SIZE_COOKIE);
+
+                if (cartSizeCookie == null)
+                {
+                    return;
+                }
+
+                int elementsInCart = Convert.ToInt32(cartSizeCookie.Value);
+
+                Bilde[] bilder = db.Bilde.ToArray();
+
+                for (int i = 1; i <= elementsInCart; i++)
+                {
+                    string current = Convert.ToString(i);
+                    string spinnerId = "spinner" + current;
+                    string totalId = "total" + current;
+                    string divId = "itemContainer" + current;
+
+                    var productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
+                    string[] values = CookieHandler.getCookieValues(productCookie);
+
+                    Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
+
+                    double productPrice = p.Pris;
+                    double totalPrice = productPrice * Convert.ToInt32(values[1]);
+
+                    //Elendig måte å gjøre det på
+                    Bilde bilde = null;
+                    foreach (Bilde b in bilder)
+                    {
+                        if (b.ProduktId == p.ProduktId)
+                        {
+                            bilde = b;
+                            break;
+                        }
+                    }
+
+                    <div id="@divId" class="row" style="padding-left: 20px; padding-bottom: 5px;">
+                        <div class="col-md-6 container-fluid">
+                            <img src="@bilde.BildeSti" height="150" width="150" style="float: left; padding-top: 10px; padding-left: 10px; padding-right: 10px; padding-bottom: 10px;" />
+
+                            <div style="padding-right: 10px; padding-top: 10px; float: left">
+                                <h4>@p.Navn</h4>
+                                <p>Id: @p.ProduktId</p>
+                                <p>Pris: @productPrice kr</p>
+                            </div>
+
+                            <div style="padding-top: 20px; padding-right: 15px; padding-bottom: 10px; float: right;">
+
+                                <p>Antall:</p>
+                                <select id="@spinnerId" class="form-control selectpicker">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+
+                                <p id="@totalId">Total: @totalPrice kr</p>
+
+                                <button class="btn btn-danger" onclick="removeCartProduct(@current,@i)">Remove</button>
+
+                            </div>
+
+                            <script>
+                                spinner = "#@spinnerId";
+
+                                $(spinner).val(@values[1]);
+                                $(spinner).change();
+
+                                $(spinner).on('change', function () {
+                                    updateCartProduct(@i);
+
+                                    var selected = $(this).find("option:selected").val();
+                                    totalFieldId = "#@totalId";
+                                    $(totalFieldId).text("Total: " + (selected * @productPrice) + " kr");
+
+                                });
+
+                            </script>
+
+                        </div>
+                    </div>
+                    <hr />
+                }
+            }
+
+        </div>
+
+        <div class="col-md-3" style="float: right; border: 2px solid #ddd; border-radius: 10px;">
+            <h2>Oversikt</h2>
+            <hr />
+            <p id="totalPris">Totalt: @totalPris kr</p><br />
+            <p>Frakt: 0kr</p><br />
+            <p>Rabatt: -0kr</p>
+            <h3 id="endeligPris">Endelig pris: @totalPris kr</h3>
+            <br />
+            <button class="btn btn-success btn-block" style="margin-bottom: 10px" onclick="location.href = 'Receipt.cshtml';">Place order</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
