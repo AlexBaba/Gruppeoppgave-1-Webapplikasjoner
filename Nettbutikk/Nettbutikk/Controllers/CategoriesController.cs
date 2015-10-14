@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web.Mvc;
 using Nettbutikk.Models;
+using System.Linq;
 
 namespace Nettbutikk.Controllers
 {
@@ -30,6 +31,12 @@ namespace Nettbutikk.Controllers
                 return HttpNotFound();
             }
             return View(category);
+        }
+
+        // GET: category/{id} (products in category)
+        public async Task<ActionResult> Products(int id)
+        {
+            return View(await db.Products.Where(p => id == p.Category.Id).ToListAsync());
         }
     }
 }

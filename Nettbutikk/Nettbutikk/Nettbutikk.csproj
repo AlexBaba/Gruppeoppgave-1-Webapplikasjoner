@@ -250,6 +250,10 @@
     <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Infrastructure\Routes\Constraints.Guid.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Migrations\201510140944376_Initial.cs" />
+    <Compile Include="Migrations\201510140944376_Initial.Designer.cs">
+      <DependentUpon>201510140944376_Initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
@@ -257,6 +261,7 @@
     <Compile Include="Models\Binding\Manage.cs" />
     <Compile Include="Models\Binding\Product.cs" />
     <Compile Include="Models\Binding\Search.cs" />
+    <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CreditCard.cs" />
     <Compile Include="Models\Order.cs" />
@@ -329,7 +334,7 @@
     <Content Include="Views\Address\Index.cshtml" />
     <Content Include="Views\Categories\Create.cshtml" />
     <Content Include="Views\Categories\Delete.cshtml" />
-    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\ListProducts.cshtml" />
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
@@ -365,6 +370,13 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <None Include="Project_Readme.html" />
+    <Content Include="Views\Home\Product_ListItem.cshtml" />
+    <Content Include="Views\Shared\_LoginModal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201510140944376_Initial.resx">
+      <DependentUpon>201510140944376_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -38,6 +38,6 @@ namespace Nettbutikk.Models
             set;
         }
         
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
+        public virtual ICollection<OrderLine> Items { get; set; }
     }
 }

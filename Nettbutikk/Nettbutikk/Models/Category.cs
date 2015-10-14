@@ -28,6 +28,10 @@ namespace Nettbutikk.Models
             get;
             set;
         }
+
+        public int? ParentCategoryId { get; set; }
+
+        public virtual Category ParentCategory { get; set; }
         
         [InverseProperty("Category")]
         public virtual ICollection<Product> Products { get; set; }

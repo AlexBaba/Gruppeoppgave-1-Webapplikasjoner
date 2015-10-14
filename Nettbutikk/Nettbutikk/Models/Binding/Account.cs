@@ -71,6 +71,21 @@ namespace Nettbutikk.Models.Binding
     public class RegisterAccount
     {
         [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        [Required]
+        public Address Address { get; set; }
+
+        [Required]
+        public ZipCode ZipCode { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }

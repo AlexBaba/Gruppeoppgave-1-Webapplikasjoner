@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-md-6">
             <div class="listitem_image">
-                <img src="@Model.ImageURL" alt="Bilde av @Model.Name"/>
+                <img src="@Model.ImageUrl" alt="Bilde av @Model.Name"/>
             </div>
 
         </div>
         <div class="col-md-6">
-            @Html.ActionLink(Model.Name,"Product","Home", new { ProductId = Model.ProductID},null)
+            @Html.RouteLink(Model.Name, new { controller = "products", action = "details", Id = Model.Id})
         </div>
         </div>
     <div class="listitem_description_outer">
@@ -19,7 +19,7 @@
         </div>
     </div>
     <p>Antall på lager: @Model.Stock</p>
-    <a href="#" id="@Model.ProductID" data-productName="@Model.Name" class="btn btn-success">kr @Model.Price,- <span class="glyphicon glyphicon-shopping-cart"></span></a>
+    <a href="#" id="@Model.Id" data-productName="@Model.Name" class="btn btn-success">kr @Model.Price,- <span class="glyphicon glyphicon-shopping-cart"></span></a>
 </div>
 
 <script>
@@ -30,10 +30,10 @@
             $(this).hide();
         })
 
-        $(".product_listitem a").unbind("click");
-        $(".product_listitem a").click(function () {
-            alert("TODO: legg " + $(this).attr("data-productName") + " i shoppingcart (Product_ListItem.cshtml)")
-            // Add to shoppingcart
-        })
+        $(".product_listitem a.btn-success")
+            .unbind("click")
+            .click(function () {
+                alert("TODO: legg " + $(this).attr("data-productName") + " i shoppingcart")
+            })
     })
 </script>

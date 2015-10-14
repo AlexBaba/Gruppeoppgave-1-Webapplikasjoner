@@ -11,7 +11,7 @@
             @foreach (var category in categories)
             {
                 <li>
-                    @Html.ActionLink(category.Name, "ListProducts", "Categories", new { @CategoryID = category.Id }, null)
+                    @Html.RouteLink(category.Name, new { controller = "category", action = "products" })
                 </li>
 
             }
@@ -23,10 +23,7 @@
 
         @foreach (var product in products)
         {
-            bool startRow = counter++ % 3 == 0;
-            bool endRow = counter % 3 == 0;
-
-            if (startRow)
+            if (counter++ % 3 == 0)
             {
                 @Html.Raw("<div class='row'>")
             }
@@ -36,7 +33,7 @@
                 @Html.Partial("Product_ListItem", product)
             </div>
 
-            if (endRow || products.Count() == counter)
+            if (counter % 3 == 0)
             {
                 @Html.Raw("</div>")
             }
