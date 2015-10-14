@@ -46,6 +46,15 @@ namespace Nettbutikk
             );
 
             routes.MapRoute(
+                name: "AccountManagement",
+                url: "account/{action}",
+                defaults: new
+                {
+                    controller = "Account.ManageControllergit ",
+                    action = "Index"
+                });
+
+            routes.MapRoute(
                 "Search",
                 url: "search/{term:string}",
                 defaults: new {
@@ -53,17 +62,7 @@ namespace Nettbutikk
                     action = "Search"
                 }
             );
-
-            routes.MapRoute(
-                name: "Admin/Products",
-                url: "admin/products/{action}/{id}",
-                defaults: new {
-                    controller = "Products",
-                    action = "Index",
-                    id = UrlParameter.Optional
-                }
-            );
-
+            
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

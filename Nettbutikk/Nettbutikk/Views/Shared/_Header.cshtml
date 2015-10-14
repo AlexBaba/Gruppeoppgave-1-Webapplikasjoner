@@ -1,16 +1,26 @@
 ﻿@using Nettbutikk.Models.Binding
 @using Nettbutikk.Helpers
-<div class="header">
+
+<div class="backbar-top"></div>
+
+<div class="header backbar-mid">
     <div class="container">
-        <div class="header-logo">
-            logo
+        <div class="header_logo">
+            <img src="~/Images/logo-tank.png" alt="Logo showing a tank" />
         </div>
-        <div class="header-search">
-            search
+        <div class="header_search">
+            <div class="searchfield">
+                <span class="glyphicon glyphicon-search search_icon"></span>
+                <input id="inputProductSearch" type="search" class="form-control" placeholder="Søk i produkter" />
+                @* Temp *@
+                <span id="searchText" style="position:absolute;top:35px;left:25px;"></span>
+            </div>
+
         </div>
-        <div class="header-options">
-            <div class="header-login">
-                @if (!User.Identity.IsAuthenticated) {
+        <div class="header_options">
+            <div class="header_login">
+                @if (!User.Identity.IsAuthenticated)
+                {
                     @AccountsHelper.LoginLink(Html);
                     @AccountsHelper.RegisterLink(Html);
                 }
@@ -22,8 +32,12 @@
                 }
             </div>
             <div class="header_shop">
-                <div class="header_shoppingcart">Handlekurv</div>
-                <div class="header_checkout">Til kassen</div>
+                <div class="header_shoppingcart">
+                    <a href="#" class="btn btn-primary">Handlekurv <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                </div>
+                <div class="header_checkout">
+                    <a href="#" class="btn btn-danger">Til kassen <span class="glyphicon glyphicon-credit-card"></span></a>
+                </div>
             </div>
 
         </div>
@@ -32,4 +46,25 @@
 @Html.Partial("_LoginModal", new AccountLogin())
 @Html.Partial("_RegisterModal", new RegisterAccount())
 
+<script>
+    $(document).ready(function () {
+        $("#inputProductSearch").on("keyup", function () {
+            $("#searchText").text($(this).val())
+        })
 
+        $("#Logout").click(function () {
+
+            $.ajax({
+                url: '@Url.Action("Logout","Account")',
+                method: "post",
+                success: function () {
+
+                    window.location.reload();
+                }, error: function (result) {
+                    alert("error: " + JSON.stringify(result));
+                }
+            })
+        })
+    })
+
+</script>
