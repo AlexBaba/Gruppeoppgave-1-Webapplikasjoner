@@ -8,6 +8,7 @@ namespace Nettbutikk.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
+        [Display(AutoGenerateField = false)]
         public Guid Id
         {
             get;

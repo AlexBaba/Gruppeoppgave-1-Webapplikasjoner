@@ -75,16 +75,7 @@ namespace Nettbutikk.Models.Binding
 
         [Required]
         public string LastName { get; set; }
-
-        [Required]
-        public Address Address { get; set; }
-
-        [Required]
-        public ZipCode ZipCode { get; set; }
-
-        [Required]
-        public string City { get; set; }
-
+        
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
