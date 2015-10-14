@@ -7,6 +7,7 @@
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Microsoft.AspNet.Identity.EntityFramework;
 
     internal sealed class Configuration : DbMigrationsConfiguration<NettbutikkContext>
     {
@@ -16,9 +17,11 @@
             ContextKey = "Nettbutikk";
         }
 
-        protected override void Seed(NettbutikkContext context)
+        protected override void Seed(NettbutikkContext db)
         {
-            context.Categories.AddOrUpdate(new Category
+            if(db.Users.Any(user => user.Roles.Contains(new IdentityUserRole)))
+
+            db.Categories.AddOrUpdate(new Category
             {
                 Id = 1,
                 Name = "Tanks",
@@ -44,7 +47,7 @@
             });
 
             // Tanks
-            context.Products.AddOrUpdate(
+            db.Products.AddOrUpdate(
             new Product
             {
                 Id = 1,
@@ -129,7 +132,7 @@
             });
 
             // Engines
-            context.Products.AddOrUpdate(
+            db.Products.AddOrUpdate(
             new Product
             {
                 Id = 10,
@@ -192,7 +195,7 @@
              });
 
             // Guns
-            context.Products.AddOrUpdate(
+            db.Products.AddOrUpdate(
             new Product
             {
                 Id = 16,

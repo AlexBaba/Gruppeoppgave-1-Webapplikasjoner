@@ -12,17 +12,14 @@ namespace Nettbutikk.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class User : IdentityUser
-    {
-        private ICollection<Address> addresses;
-        private ICollection<Order> orders;
-        
-        
+    {   
         public virtual Address PrimaryShippingAddress { get; set; }
         
         public virtual Address PrimaryBillingAddress { get; set; }
 
         public virtual CreditCard PaymentCard { get; set; }
 
+        [InverseProperty("Addressee")]
         public virtual ICollection<Address> Addresses { get; set; }
         
         [InverseProperty("Customer")]
