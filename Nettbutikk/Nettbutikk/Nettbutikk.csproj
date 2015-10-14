@@ -13,8 +13,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Oblig1_Nettbutikk</RootNamespace>
-    <AssemblyName>Oblig1_Nettbutikk</AssemblyName>
+    <RootNamespace>Nettbutikk</RootNamespace>
+    <AssemblyName>Nettbutikk</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -242,26 +242,14 @@
     <Compile Include="Controllers\Account\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="DataAccessLayer\NettbutikkContext.cs" />
+    <Compile Include="DataAccessLayer\NettbutikkInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\User.cs" />
     <Compile Include="Helpers\AccountsHelper.cs" />
     <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Infrastructure\Routes\Constraints.Guid.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
-    <Compile Include="Migrations\201510071338278_Initial.cs" />
-    <Compile Include="Migrations\201510071338278_Initial.Designer.cs">
-      <DependentUpon>201510071338278_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510112356463_ImageURL.cs" />
-    <Compile Include="Migrations\201510112356463_ImageURL.Designer.cs">
-      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510112359399_ImageURL2.cs" />
-    <Compile Include="Migrations\201510112359399_ImageURL2.Designer.cs">
-      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
@@ -377,17 +365,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510101342469_InitialCreate.resx">
-      <DependentUpon>201510101342469_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510112356463_ImageURL.resx">
-      <DependentUpon>201510112356463_ImageURL.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510112359399_ImageURL2.resx">
-      <DependentUpon>201510112359399_ImageURL2.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

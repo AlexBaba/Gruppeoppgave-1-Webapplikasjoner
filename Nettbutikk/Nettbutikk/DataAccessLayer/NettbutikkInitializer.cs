@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 
 
-namespace Nettbutikk.DAL
+namespace Nettbutikk.DataAccessLayer
 {
     public class NettbutikkInitializer : CreateDatabaseIfNotExists<NettbutikkContext>
     {

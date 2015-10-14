@@ -13,7 +13,7 @@ namespace Nettbutikk.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201510071338278_Initial"; }
+            get { return "201510140853173_Initial"; }
         }
         
         string IMigrationMetadata.Source

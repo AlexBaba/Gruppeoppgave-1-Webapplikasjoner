@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.Models;
-using Nettbutikk.DAL;
+using Nettbutikk.DataAccessLayer;
 
 namespace Nettbutikk
 {

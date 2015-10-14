@@ -1,13 +1,55 @@
-﻿@using Nettbutikk.Models
-@model IEnumerable<Category>
+﻿@using Nettbutikk.Models;
 
-    <div class="categories" id="main-categories-list">
-        @Html.Partial("_CategoryList", Model);
+@{
+    IEnumerable<Category> categories = ViewBag.Categories;
+    IEnumerable<Product> products = ViewBag.Products;
+    int counter = 0;
+}
+<div class="wrapper">
+    <div class="categories">
+        <ul class="category-list">
+            @foreach (var category in categories)
+            {
+                <li>
+                    @Html.ActionLink(category.Name, "ListProducts", "Categories", new { @CategoryID = category.Id }, null)
+                </li>
+
+            }
+        </ul>
     </div>
-
     <div class="content">
-        her e mitt content!
+
+        <h1>@ViewBag.CategoryName</h1>
+
+        @foreach (var product in products)
+        {
+            bool startRow = counter++ % 3 == 0;
+            bool endRow = counter % 3 == 0;
+
+            if (startRow)
+            {
+                @Html.Raw("<div class='row'>")
+            }
+
+
+            <div class="col-md-4">
+                @Html.Partial("Product_ListItem", product)
+            </div>
+
+            if (endRow || products.Count() == counter)
+            {
+                @Html.Raw("</div>")
+            }
+        }
+
     </div>
 
+</div>
 
+<script>
+    $(document).ready(function () {
+        $(".category-list li").click(function () {
 
+        })
+    })
+</script>

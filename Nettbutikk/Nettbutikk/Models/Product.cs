@@ -13,16 +13,29 @@ namespace Nettbutikk.Models
         {
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public float Price { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
+        [Required]
+        [Range(0, int.MaxValue)]
         public int Stock { get; set; }
-        
+
+        public string ImageUrl { get; set; }
+
+        [Required]
+        public int CategoryId { get; set; }
+
+        [InverseProperty("Products")]
         public virtual Category Category { get; set; }
     }
 }

@@ -1,8 +1,5 @@
-﻿using Nettbutikk.Models;
-using System;
-using System.Collections.Generic;
+﻿using Nettbutikk.DataAccessLayer;
 using System.Data.Entity;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -10,11 +7,11 @@ using System.Web.Routing;
 
 namespace Nettbutikk
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DAL.NettbutikkContext>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<NettbutikkContext>());
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

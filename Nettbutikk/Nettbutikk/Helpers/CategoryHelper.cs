@@ -9,7 +9,7 @@ namespace Nettbutikk.Helpers
     {
         public static IEnumerable<Category> MainCategories(ViewContext vc)
         {
-            return ((BaseController) vc.Controller).MainCategories();
+            return ((BaseController) vc.Controller).Categories();
         }
     }
 }

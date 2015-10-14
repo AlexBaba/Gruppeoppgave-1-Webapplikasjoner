@@ -20,8 +20,8 @@ namespace Nettbutikk.Migrations
                         ZipCode_Code = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Addressee_Id, cascadeDelete: false)
-                .ForeignKey("dbo.ZipCodes", t => t.ZipCode_Code, cascadeDelete: false)
+                .ForeignKey("dbo.AspNetUsers", t => t.Addressee_Id, cascadeDelete: true)
+                .ForeignKey("dbo.ZipCodes", t => t.ZipCode_Code, cascadeDelete: true)
                 .Index(t => t.Addressee_Id)
                 .Index(t => t.ZipCode_Code);
             
@@ -90,9 +90,9 @@ namespace Nettbutikk.Migrations
                         ShippingAddress_Id = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Addresses", t => t.BillingAddress_Id, cascadeDelete: false)
-                .ForeignKey("dbo.AspNetUsers", t => t.Customer_Id, cascadeDelete: false)
-                .ForeignKey("dbo.Addresses", t => t.ShippingAddress_Id, cascadeDelete: false)
+                .ForeignKey("dbo.Addresses", t => t.BillingAddress_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.Customer_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Addresses", t => t.ShippingAddress_Id, cascadeDelete: true)
                 .Index(t => t.BillingAddress_Id)
                 .Index(t => t.Customer_Id)
                 .Index(t => t.ShippingAddress_Id);
@@ -103,11 +103,11 @@ namespace Nettbutikk.Migrations
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         Order_Id = c.Guid(nullable: false),
-                        Product_Id = c.Guid(nullable: false),
+                        Product_Id = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Orders", t => t.Order_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Products", t => t.Product_Id, cascadeDelete: false)
+                .ForeignKey("dbo.Products", t => t.Product_Id, cascadeDelete: true)
                 .Index(t => t.Order_Id)
                 .Index(t => t.Product_Id);
             
@@ -115,27 +115,27 @@ namespace Nettbutikk.Migrations
                 "dbo.Products",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
-                        Name = c.String(maxLength: 128),
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
                         Price = c.Single(nullable: false),
-                        Description = c.String(),
+                        Description = c.String(nullable: false),
                         Stock = c.Int(nullable: false),
+                        ImageUrl = c.String(),
+                        CategoryId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Categories", t => t.Name)
-                .Index(t => t.Name);
+                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
+                .Index(t => t.CategoryId);
             
             CreateTable(
                 "dbo.Categories",
                 c => new
                     {
-                        Name = c.String(nullable: false, maxLength: 128),
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
                         Description = c.String(nullable: false),
-                        ParentCategory_Name = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.Name)
-                .ForeignKey("dbo.Categories", t => t.ParentCategory_Name)
-                .Index(t => t.ParentCategory_Name);
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.CreditCards",
@@ -194,8 +194,7 @@ namespace Nettbutikk.Migrations
             DropForeignKey("dbo.AspNetUsers", "PaymentCard_Number", "dbo.CreditCards");
             DropForeignKey("dbo.Orders", "ShippingAddress_Id", "dbo.Addresses");
             DropForeignKey("dbo.OrderLines", "Product_Id", "dbo.Products");
-            DropForeignKey("dbo.Products", "Name", "dbo.Categories");
-            DropForeignKey("dbo.Categories", "ParentCategory_Name", "dbo.Categories");
+            DropForeignKey("dbo.Products", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.OrderLines", "Order_Id", "dbo.Orders");
             DropForeignKey("dbo.Orders", "Customer_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Orders", "BillingAddress_Id", "dbo.Addresses");
@@ -204,8 +203,7 @@ namespace Nettbutikk.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.Categories", new[] { "ParentCategory_Name" });
-            DropIndex("dbo.Products", new[] { "Name" });
+            DropIndex("dbo.Products", new[] { "CategoryId" });
             DropIndex("dbo.OrderLines", new[] { "Product_Id" });
             DropIndex("dbo.OrderLines", new[] { "Order_Id" });
             DropIndex("dbo.Orders", new[] { "ShippingAddress_Id" });

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Nettbutikk.DAL;
+using Nettbutikk.DataAccessLayer;
 using Nettbutikk.Models;
 
 namespace Nettbutikk.Controllers

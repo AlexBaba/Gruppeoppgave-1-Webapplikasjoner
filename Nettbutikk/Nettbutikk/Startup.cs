@@ -2,7 +2,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
 using System.Web.Http;
-using Nettbutikk.DAL;
+using Nettbutikk.DataAccessLayer;
 using System.Net.Http.Formatting;
 using Newtonsoft.Json.Serialization;
 using System.Linq;

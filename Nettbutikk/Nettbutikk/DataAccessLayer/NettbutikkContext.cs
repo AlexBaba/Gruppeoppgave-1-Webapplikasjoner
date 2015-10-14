@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Nettbutikk.Models;
 using System.Data.Entity;
 
-namespace Nettbutikk.DAL
+namespace Nettbutikk.DataAccessLayer
 {
     public class NettbutikkContext : IdentityDbContext<User>
     {

@@ -7,19 +7,19 @@ namespace Nettbutikk.Models
 {   
     public partial class Category
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id
+        {
+            get;
+            set;
+        }
+
         [Required]
         public string Name
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
+            get;
+            set;
         }
 
         [Required]
@@ -28,9 +28,7 @@ namespace Nettbutikk.Models
             get;
             set;
         }
-
-        public virtual Category ParentCategory { get; set; }
-
+        
         [InverseProperty("Category")]
         public virtual ICollection<Product> Products { get; set; }
     }

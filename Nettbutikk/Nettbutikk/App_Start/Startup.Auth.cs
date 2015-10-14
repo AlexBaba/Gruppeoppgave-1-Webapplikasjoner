@@ -5,7 +5,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Nettbutikk.Models;
-using Nettbutikk.DAL;
+using Nettbutikk.DataAccessLayer;
 using Microsoft.Owin.Security.Google;
 using System.Web.Configuration;
 

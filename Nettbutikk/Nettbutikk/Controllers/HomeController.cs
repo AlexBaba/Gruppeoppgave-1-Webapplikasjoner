@@ -12,6 +12,7 @@ namespace Nettbutikk.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Categories = db.Categories.AsEnumerable();
             return View();
         }
 

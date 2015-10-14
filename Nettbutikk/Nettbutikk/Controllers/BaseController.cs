@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Nettbutikk.DAL;
+using Nettbutikk.DataAccessLayer;
 using Nettbutikk.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +52,9 @@ namespace Nettbutikk.Controllers
             }
         }
 
-        public IEnumerable<Category> MainCategories()
+        public IEnumerable<Category> Categories()
         {
-            return db.Categories.Where(c => c.ParentCategory == null).AsEnumerable();
+            return db.Categories.AsEnumerable();
         }
 
         protected string PageTitle
