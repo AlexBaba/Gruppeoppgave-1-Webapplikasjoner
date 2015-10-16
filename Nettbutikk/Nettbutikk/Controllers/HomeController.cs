@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using Nettbutikk.Models.Binding;
 using Nettbutikk.Infrastructure;
 using Nettbutikk.Models;
+using System.Web;
+using System;
 
 namespace Nettbutikk.Controllers
 {
