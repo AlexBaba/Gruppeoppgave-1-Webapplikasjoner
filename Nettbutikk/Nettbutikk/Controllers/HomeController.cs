@@ -21,6 +21,33 @@ namespace Nettbutikk.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        public int AddToCart(int ProductId)
+        {
+            var cookie = Request.Cookies["Shoppingcart"] ?? new HttpCookie("Shoppingcart");
+            int numProduct;
+            try
+            {
+                numProduct = Convert.ToInt32(cookie[ProductId.ToString()]);
+                numProduct++;
+            }
+            catch (Exception)
+            {
+                numProduct = 1;
+            }
+            cookie[ProductId.ToString()] = numProduct.ToString();
+            Response.Cookies.Add(cookie);
+
+            var list = cookie.Values;
+            var numItemsInCart = 0;
+            foreach (var c in list)
+            {
+                var count = Convert.ToInt32(cookie[c.ToString()]);
+                numItemsInCart += count;
+            }
+            return numItemsInCart;
+        }
+
         public ActionResult Receipt()
         {
 
