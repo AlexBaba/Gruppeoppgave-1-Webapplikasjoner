@@ -1,0 +1,36 @@
+﻿@using Nettbutikk.Models
+@model IEnumerable<Nettbutikk.Models.Product>
+
+<table class="products-table">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Price</td>
+        <tr/>
+    </thead>
+    <tbody>
+        @foreach (Product product in Model)
+        {
+            <tr id="product-@product.Id">
+                <td>@Html.ActionLink(product.Name, "Details")</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Price</td>
+        <tr />
+    </tfoot>
+    <template id="template-products-table-row">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </template>
+</table>

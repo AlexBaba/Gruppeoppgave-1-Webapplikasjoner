@@ -10,7 +10,7 @@ using System;
 
 namespace Nettbutikk.Models
 {
-    public class User : IdentityUser
+    public partial class User : IdentityUser
     {
 
         [Required]
@@ -36,16 +36,6 @@ namespace Nettbutikk.Models
             get {
                 return this.FirstName + " " + this.LastName;
             }
-        }
-
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
-        {
-            var identity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-
-            identity.AddClaim(new Claim(ClaimTypes.Email, this.Email));
-            identity.AddClaim(new Claim(ClaimTypes.GivenName, this.FullName));
-
-            return identity;
         }
     }
 }

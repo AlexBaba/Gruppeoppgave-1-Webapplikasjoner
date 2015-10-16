@@ -41,7 +41,7 @@ namespace Nettbutikk.Helpers
 
         public static MvcHtmlString HomeLink(this HtmlHelper html)
         {
-            return Link(html, "Account", "Index");
+            return html.ActionLink("Manage", "Index", new { controller = "manage"}, htmlAttributes);
         }
     }
 }

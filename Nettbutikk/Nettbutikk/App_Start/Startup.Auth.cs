@@ -3,20 +3,19 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Google;
 using Owin;
 using Nettbutikk.Models;
-using Nettbutikk.DataAccessLayer;
-using Microsoft.Owin.Security.Google;
-using System.Web.Configuration;
+using Nettbutikk.DataAccess;
 
 namespace Nettbutikk
 {
     public partial class Startup
     {
+        // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            // Configure the db context, user manager and signin manager to use
-            // a single instance per request.
+            // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(NettbutikkContext.Create);
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
             app.CreatePerOwinContext<SignInManager>(SignInManager.Create);
@@ -27,7 +26,7 @@ namespace Nettbutikk
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/account/login"),
+                LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.
@@ -56,15 +55,15 @@ namespace Nettbutikk
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            app.UseFacebookAuthentication(
-               appId: WebConfigurationManager.AppSettings["facebook-api-app-id"],
-               appSecret: WebConfigurationManager.AppSettings["facebook-api-app-secret"]);
+            //app.UseFacebookAuthentication(
+            //   appId: "",
+            //   appSecret: "");
 
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            {
-                ClientId = WebConfigurationManager.AppSettings["google-api-client-id"],
-                ClientSecret = WebConfigurationManager.AppSettings["google-api-client-secret"]
-            });
+            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            //{
+            //    ClientId = "",
+            //    ClientSecret = ""
+            //});
         }
     }
 }

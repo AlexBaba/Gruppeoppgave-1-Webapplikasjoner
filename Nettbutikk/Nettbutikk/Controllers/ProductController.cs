@@ -7,21 +7,23 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Nettbutikk.DataAccessLayer;
+using Nettbutikk.DataAccess;
 using Nettbutikk.Models;
 
 namespace Nettbutikk.Controllers
 {
-    public class ProductController : BaseController
+    public class ProductController : Controller
     {
-        // GET: Products
+        private NettbutikkContext db = new NettbutikkContext();
+
+        // GET: Product
         public async Task<ActionResult> Index()
         {
             return View(await db.Products.ToListAsync());
         }
 
-        // GET: Products/{id:Guid}
-        public async Task<ActionResult> DetailsId(Guid? id)
+        // GET: Product/Details/5
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -35,22 +37,93 @@ namespace Nettbutikk.Controllers
             return View(product);
         }
 
-        // GET: Products/{name:string}
-        public async Task<ActionResult> DetailsName(string name)
+        // GET: Product/Create
+        public ActionResult Create()
         {
-            if (name == null || name.Length < 1)
+            return View();
+        }
+
+        // POST: Product/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Price,Description,ImageUrl")] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Products.Add(product);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(product);
+        }
+
+        // GET: Product/Edit/5
+        public async Task<ActionResult> Edit(int? id)
+        {
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            Product product = await db.Products.Where(p => p.Name == name).FirstAsync();
-
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
             }
-
             return View(product);
+        }
+
+        // POST: Product/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Price,Description,ImageUrl")] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(product).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+
+        // GET: Product/Delete/5
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Product product = await db.Products.FindAsync(id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+            return View(product);
+        }
+
+        // POST: Product/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
+        {
+            Product product = await db.Products.FindAsync(id);
+            db.Products.Remove(product);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

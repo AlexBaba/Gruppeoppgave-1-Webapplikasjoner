@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Nettbutikk.DataAccessLayer;
+using Nettbutikk.DataAccess;
 using Nettbutikk.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,6 @@ using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers
 {
-    [RequireHttps]
     public class BaseController : Controller
     {
         /**

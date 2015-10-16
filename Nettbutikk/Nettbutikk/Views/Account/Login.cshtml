@@ -1,5 +1,5 @@
-﻿@using Nettbutikk.Models.Binding
-@model AccountLogin
+﻿@using Nettbutikk.Models
+@model LoginViewModel
 @{
     ViewBag.Title = "Log in";
 }
@@ -53,7 +53,7 @@
     </div>
     <div class="col-md-4">
         <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalAccountLogin() { ReturnUrl = ViewBag.ReturnUrl })
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
 </div>

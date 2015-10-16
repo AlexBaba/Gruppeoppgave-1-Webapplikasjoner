@@ -1,0 +1,10 @@
+﻿@using Nettbutikk.Models
+@model Cart
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach(var item in Model.Items)
+{
+    @Html.Partial("_CartItem", item)
+}

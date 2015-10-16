@@ -1,10 +1,5 @@
-using Nettbutikk.Models;
-using Nettbutikk.Models.Binding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers
 {
@@ -12,13 +7,8 @@ namespace Nettbutikk.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Categories = db.Categories.AsEnumerable();
-            ViewBag.Products = db.Products.AsEnumerable();
-            return View();
-        }
-        
-        public ActionResult Search(Search search)
-        {
+            ViewBag.Categories = db.Categories.ToList();
+            ViewBag.Products = db.Products.ToList();
             return View();
         }
     }

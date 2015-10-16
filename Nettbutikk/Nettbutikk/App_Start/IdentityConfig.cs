@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.Models;
-using Nettbutikk.DataAccessLayer;
+using Nettbutikk.DataAccess;
 
 namespace Nettbutikk
 {
@@ -18,7 +18,7 @@ namespace Nettbutikk
         {
         }
 
-        public static UserManager Create(IdentityFactoryOptions<UserManager> options, IOwinContext context) 
+        public static UserManager Create(IdentityFactoryOptions<UserManager> options, IOwinContext context)
         {
             var manager = new UserManager(new UserStore<User>(context.Get<NettbutikkContext>()));
             // Configure validation logic for usernames
@@ -43,7 +43,7 @@ namespace Nettbutikk
 
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<User>(dataProtectionProvider.Create("Nettbutikk"));
             }
             return manager;
@@ -60,7 +60,7 @@ namespace Nettbutikk
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(User user)
         {
-            return user.GenerateUserIdentityAsync((UserManager) UserManager);
+            return user.GenerateUserIdentityAsync((UserManager)UserManager);
         }
 
         public static SignInManager Create(IdentityFactoryOptions<SignInManager> options, IOwinContext context)
