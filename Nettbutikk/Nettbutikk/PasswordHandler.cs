@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using Local_Nettbutikk.DAL;
 
 
 public class PasswordHandler

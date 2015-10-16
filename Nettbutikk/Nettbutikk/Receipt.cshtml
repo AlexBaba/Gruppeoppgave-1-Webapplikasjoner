@@ -1,19 +1,25 @@
-﻿@{
+﻿@model Final_Nettbutikk.ViewModels.ReceiptViewModel
+@using Final_Nettbutikk.DAL;
+
+@{
     Layout = null;
 }
-
-@using Local_Nettbutikk.DAL;
 
 <!DOCTYPE html>
 
 <html>
 <head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>Receipt</title>
 </head>
 <body>
    <h1>Receipt</h1>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Produkt Id</th>
@@ -26,51 +32,25 @@
         <tbody>
 
             @{
-                var cartSizeCookie = CookieHandler.getCookie(CookieHandler.CART_SIZE_COOKIE);
 
-
-                double totalPrice = 0;
-
-
-                if (cartSizeCookie == null)
+                for (int i = 0; i < Model.Produkter.Count; i++)
                 {
-                    return;
-                }
-
-
-                var db = new NettbutikkEntities();
-                int elements = Convert.ToInt32(cartSizeCookie.Value);
-
-                for (int i = 1; i <= elements; i++)
-                {
-                    string current = Convert.ToString(i);
-                    HttpCookie productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
-
-                    string[] values = CookieHandler.getCookieValues(productCookie);
-
-                    if (values[0] == null || values[1] == null)
-                    {
-                        continue;
-                    }
-
-                    Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
-
-                    totalPrice += p.Pris * Convert.ToInt32(values[1]);
 
                     <tr>
                         <td>
-                            @p.ProduktId
+                            @Model.Produkter.ElementAt(i).ProduktId
                         </td>
                         <td>
-                            @p.Navn
+                            @Model.Produkter.ElementAt(i).Navn
                         </td>
                         <td>
-                            @p.Pris
+                            @String.Format("{0:n}", Model.Produkter.ElementAt(i).Pris) kr
                         </td>
                         <td>
-                            @values[1]
+                            @Model.Antall.ElementAt(i)
                         </td>
                     </tr>
+
                 }
 
             }
@@ -78,110 +58,13 @@
         </tbody>
     </table>
 
-    <p>Total pris: @totalPrice kr</p>
+    <p>Total pris: @String.Format("{0:n}", Model.TotalPrice) kr</p>
 
+    <h2>Checkout Complete</h2>
 
-    @{ 
-        //Send order to database
+    <p>Thanks for your order! Your order number is: @Model.Ordre.OrdreId</p>
 
-        if (Session["User"] == null)
-        {
-            System.Diagnostics.Debug.WriteLine("No user found!");
-            <h1>User is not logged in, and cannot place orders</h1>
-            return;
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine("Logged in as: " + Session["User"].ToString());
-        }
-
-        System.Diagnostics.Debug.WriteLine("Adding ordre to database");
-
-        Ordre ordre = new Ordre();
-
-        int ordreId = db.Ordre.ToArray().Length;
-
-        ordre.OrdreId = ordreId;
-
-        //Bruk login email til å finne kundeId
-
-        string email = Session["User"].ToString();
-
-        //In case no id is found
-        //Remove this in later versions
-        ordre.KundeId = 0;
-
-        foreach (Person p in db.Person.ToList())
-        {
-            if (email == p.Email)
-            {
-                foreach (Kunde k in db.Kunde.ToList())
-                {
-                    if (p.PersonId == k.PersonId)
-                    {
-                        ordre.KundeId = k.KundeId;
-                    }
-                }
-            }
-        }
-
-        ordre.Dato = DateTime.Now;
-
-        db.Ordre.Add(ordre);
-        db.SaveChanges();
-
-        System.Diagnostics.Debug.WriteLine("Ordre was added");
-
-        //Legg til alle bestillinger som tilhører denne orderen
-
-        System.Diagnostics.Debug.WriteLine("Adding bestillinger to database");
-
-        int bestillingId = db.Bestilling.ToArray().Length;
-
-        for (int i = 1; i <= elements; i++)
-        {
-            string current = Convert.ToString(i);
-            HttpCookie productCookie = CookieHandler.getCookie(CookieHandler.PRODUCT + current);
-
-            string[] values = CookieHandler.getCookieValues(productCookie);
-
-            if (values[0] == null || values[1] == null)
-            {
-                continue;
-            }
-
-            Produkt p = db.Produkt.Find(Convert.ToInt32(values[0]));
-
-            Bestilling produktBestilling = new Bestilling();
-            produktBestilling.BestillingId = bestillingId++;
-            produktBestilling.OrdreId = ordreId;
-            produktBestilling.ProduktId = p.ProduktId;
-            produktBestilling.Antall = (short)Convert.ToInt32(values[1]);
-
-            db.Bestilling.Add(produktBestilling);
-
-        }
-
-        db.SaveChanges();
-
-        System.Diagnostics.Debug.WriteLine("Bestillinger was added to database");
-
-        <h1>The order has been sent</h1>
-
-        //Remove all elements from the cart
-        for (int i = 1; i <= elements; i++)
-        {
-            string current = Convert.ToString(i);
-            System.Diagnostics.Debug.WriteLine("Deleting cookie: " + current);
-            CookieHandler.deleteCookie(CookieHandler.getCookie(CookieHandler.PRODUCT + current));
-        }
-
-        System.Diagnostics.Debug.WriteLine("Delete cart size cookie");
-        CookieHandler.deleteCookie(cartSizeCookie);
-
-    }
-
-
+    <p>How about shopping for some more products in our <a href="~/Default.aspx">store</a></p>
 
 </body>
 </html>
