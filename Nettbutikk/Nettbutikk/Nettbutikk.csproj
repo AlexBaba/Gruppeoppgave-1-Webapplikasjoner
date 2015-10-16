@@ -169,7 +169,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="CategoryController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -184,6 +184,7 @@
     <Compile Include="Helpers\AccountsHelper.cs" />
     <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Infrastructure\CookieHandler.cs" />
     <Compile Include="Migrations\201510161006096_initial.cs" />
     <Compile Include="Migrations\201510161006096_initial.Designer.cs">
       <DependentUpon>201510161006096_initial.cs</DependentUpon>
@@ -192,20 +193,26 @@
     <Compile Include="Migrations\201510161157332_Cart.Designer.cs">
       <DependentUpon>201510161157332_Cart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510161318317_Another.cs" />
+    <Compile Include="Migrations\201510161318317_Another.Designer.cs">
+      <DependentUpon>201510161318317_Another.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Binding\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
     <Compile Include="Models\Binding\Category.cs" />
+    <Compile Include="Models\Binding\Checkout.cs" />
     <Compile Include="Models\Binding\Manage.cs" />
     <Compile Include="Models\Binding\Product.cs" />
+    <Compile Include="Models\Binding\Receipt.cs" />
     <Compile Include="Models\Binding\Search.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\Binding\ManageViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderLine.cs" />
     <Compile Include="Models\Picture.cs" />
@@ -316,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510161157332_Cart.resx">
       <DependentUpon>201510161157332_Cart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510161318317_Another.resx">
+      <DependentUpon>201510161318317_Another.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -12,8 +12,8 @@ namespace Nettbutikk.Models
         public Guid Id { get; set; }
 
         [Required]
-        [Range(1, ulong.MaxValue)]
-        public ulong Amount { get; set; }
+        [Range(1, int.MaxValue)]
+        public int Amount { get; set; }
         
         [Required]
         [InverseProperty("Items")]

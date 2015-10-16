@@ -20,6 +20,7 @@ namespace Nettbutikk.DataAccess
         public DbSet<Product> Products { get; set; }
         public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<Image> Images { get; set; }
 
 
         public static NettbutikkContext Create()

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Nettbutikk.DataAccess;
 using Nettbutikk.Models.Binding;
+using Nettbutikk.Infrastructure;
+using Nettbutikk.Models;
 
 namespace Nettbutikk.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
@@ -19,7 +17,7 @@ namespace Nettbutikk.Controllers
         
         public ActionResult Checkout()
         {
-            CheckoutViewModel viewModel = new CheckoutViewModel();
+            Checkout viewModel = new Checkout();
             return View(viewModel);
         }
 
@@ -40,22 +38,20 @@ namespace Nettbutikk.Controllers
             System.Diagnostics.Debug.WriteLine("Logged in as: " + Session["User"].ToString());
 
             ReceiptViewModel viewModel = new ReceiptViewModel();
-            var db = new NettbutikkEntities();
 
-            db.Ordre.Add(viewModel.Ordre);
+            db.Orders.Add(viewModel.Order);
             db.SaveChanges();
 
-            int bestillingId = db.Bestilling.ToArray().Count();
-            int bestillinger = viewModel.Produkter.Count;
+            int bestillingId = db.Orders.ToArray().Count();
+            int bestillinger = viewModel.Products.Count;
 
             for (int i = 0; i < bestillinger; i++)
             {
-                Bestilling produktBestilling = new Bestilling();
-                produktBestilling.BestillingId = bestillingId++;
-                produktBestilling.OrdreId = viewModel.Ordre.OrdreId;
-                produktBestilling.ProduktId = viewModel.Produkter[i].ProduktId;
-                produktBestilling.Antall = (short)viewModel.Antall[i];
-                db.Bestilling.Add(produktBestilling);
+                OrderLine line = new OrderLine();
+                line.Order = viewModel.Order;
+                line.Product = viewModel.Products[i];
+                line.Amount = viewModel.Amounts[i];
+                db.OrderLines.Add(line);
             }
 
             db.SaveChanges();
