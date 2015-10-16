@@ -1,0 +1,70 @@
+﻿@model Final_Nettbutikk.ViewModels.ReceiptViewModel
+@using Final_Nettbutikk.DAL;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Receipt</title>
+</head>
+<body>
+   <h1>Receipt</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Produkt Id</th>
+                <th>Navn</th>
+                <th>Pris</th>
+                <th>Antall</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+
+                for (int i = 0; i < Model.Produkter.Count; i++)
+                {
+
+                    <tr>
+                        <td>
+                            @Model.Produkter.ElementAt(i).ProduktId
+                        </td>
+                        <td>
+                            @Model.Produkter.ElementAt(i).Navn
+                        </td>
+                        <td>
+                            @String.Format("{0:n}", Model.Produkter.ElementAt(i).Pris) kr
+                        </td>
+                        <td>
+                            @Model.Antall.ElementAt(i)
+                        </td>
+                    </tr>
+
+                }
+
+            }
+
+        </tbody>
+    </table>
+
+    <p>Total pris: @String.Format("{0:n}", Model.TotalPrice) kr</p>
+
+    <h2>Checkout Complete</h2>
+
+    <p>Thanks for your order! Your order number is: @Model.Ordre.OrdreId</p>
+
+    <p>How about shopping for some more products in our <a href="~/Default.aspx">store</a></p>
+
+</body>
+</html>

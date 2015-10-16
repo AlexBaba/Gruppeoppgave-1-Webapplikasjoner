@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+@using Local_Nettbutikk.DAL;
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script src="~/Scripts/js-cookie.js"></script>
+        @{ 
+            var db = new NettbutikkEntities();
+
+            Produkt produkt = db.Produkt.Find(2);
+            Bilde bilde = null;
+            foreach (Bilde b in db.Bilde.ToList()) {
+                if (b.ProduktId == produkt.ProduktId) {
+                    bilde = b;
+                    break;
+                }
+            }
+        }
+
+        <title>@produkt.Navn</title>
+        <script>
+
+            function addProductToCart() {
+                var cartSizeCookieStr = Cookies.get('cart_size');
+                var cartSize = parseInt(cartSizeCookieStr);
+
+                cartSize++;
+                Cookies.set('cart_size', cartSize);
+
+                Cookies.set('product' + cartSize,@produkt.ProduktId + '&1');
+
+                alert("Produkt har blitt lagt til i handlekurven");
+
+            }
+           
+        </script>
+
+    </head>
+    <body>
+        <div style="padding-top: 30px; padding-left: 30px;">
+            <img src="@bilde.BildeSti" height="400" width="400" style="float: left; " />
+            <div style="float: left; padding-left: 20px;">
+                <h2>@produkt.Navn</h2>
+                <p>Id: @produkt.ProduktId</p>
+                <p>Pris: @produkt.Pris kr</p>
+                <text>Beskrivelse:</text>
+                <br />
+                <p>@produkt.Beskrivelse</p>
+
+
+                <button class="btn btn-success" onclick="addProductToCart()">Legg til i handlekurv</button>
+                <button class="btn btn-success" onclick="window.location.href = '/Checkout.cshtml';">Gå til handlekurv</button>
+
+            </div>
+        </div>
+
+    </body>
+</html>
