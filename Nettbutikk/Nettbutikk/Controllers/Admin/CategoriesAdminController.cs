@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace Nettbutikk.Controllers.Admin
 {
     [Authorize]
-    public class CategoriesAdminController : Controllers.CategoriesController
+    public class CategoriesAdminController : Controllers.CategoryController
     {
         // GET: Categories/Create
         public ActionResult Create()

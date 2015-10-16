@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Nettbutikk.Controllers
 {
-    public class CategoriesController : BaseController
+    public class CategoryController : BaseController
     {
         // GET: Categories
         public async Task<ActionResult> Index()
@@ -34,9 +34,9 @@ namespace Nettbutikk.Controllers
         }
 
         // GET: category/{id} (products in category)
-        public async Task<ActionResult> Products(int id)
+        public ActionResult Products(int? id)
         {
-            return View(await db.Products.Where(p => id == p.Category.Id).ToListAsync());
+            return View(db.Categories.Where(c => id == c.Id).Include(c => c.Products).FirstAsync());
         }
     }
 }

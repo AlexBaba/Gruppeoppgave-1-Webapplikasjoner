@@ -12,7 +12,7 @@ using Nettbutikk.Models;
 
 namespace Nettbutikk.Controllers
 {
-    public class ProductsController : BaseController
+    public class ProductController : BaseController
     {
         // GET: Products
         public async Task<ActionResult> Index()
