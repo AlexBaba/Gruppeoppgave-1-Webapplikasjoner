@@ -8,11 +8,6 @@ namespace Nettbutikk.Models
     
     public partial class Product
     {
-
-        public Product()
-        {
-        }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -27,15 +22,15 @@ namespace Nettbutikk.Models
         public string Description { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue)]
-        public int Stock { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        [Required]
-        public int CategoryId { get; set; }
+        [Range(0, uint.MaxValue)]
+        public uint Stock { get; set; }
 
         [InverseProperty("Products")]
         public virtual Category Category { get; set; }
+
+        [InverseProperty("Product")]
+        public virtual ICollection<Image> Images { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

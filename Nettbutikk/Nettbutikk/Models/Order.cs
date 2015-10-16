@@ -14,6 +14,7 @@ namespace Nettbutikk.Models
         [HiddenInput(DisplayValue = false)]
         public Guid Id { get; set; }
         
+        [Required]
         public DateTime PlacementDateTime { get; set; }
 
         [Required]
@@ -38,6 +39,7 @@ namespace Nettbutikk.Models
             set;
         }
         
+        [InverseProperty("Order")]
         public virtual ICollection<OrderLine> Items { get; set; }
     }
 }

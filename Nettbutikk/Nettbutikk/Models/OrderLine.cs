@@ -7,8 +7,8 @@ namespace Nettbutikk.Models
     
     public partial class OrderLine
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
+        [Required]
         public Guid Id { get; set; }
 
         [Required]
@@ -16,6 +16,7 @@ namespace Nettbutikk.Models
         public ulong Amount { get; set; }
         
         [Required]
+        [InverseProperty("Items")]
         public virtual Order Order { get; set; }
         
         [Required]

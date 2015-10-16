@@ -20,7 +20,7 @@ namespace Nettbutikk.Migrations
                         ZipCode_Code = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Addressee_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.Addressee_Id, cascadeDelete: false)
                 .ForeignKey("dbo.ZipCodes", t => t.ZipCode_Code, cascadeDelete: false)
                 .Index(t => t.Addressee_Id)
                 .Index(t => t.ZipCode_Code);
@@ -30,6 +30,8 @@ namespace Nettbutikk.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        FirstName = c.String(nullable: false),
+                        LastName = c.String(nullable: false),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -101,7 +103,7 @@ namespace Nettbutikk.Migrations
                 "dbo.OrderLines",
                 c => new
                     {
-                        Id = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false),
                         Order_Id = c.Guid(nullable: false),
                         Product_Id = c.Int(nullable: false),
                     })
@@ -119,13 +121,14 @@ namespace Nettbutikk.Migrations
                         Name = c.String(nullable: false),
                         Price = c.Single(nullable: false),
                         Description = c.String(nullable: false),
-                        Stock = c.Int(nullable: false),
-                        ImageUrl = c.String(),
-                        CategoryId = c.Int(nullable: false),
+                        Category_Id = c.Int(),
+                        MainImage_Path = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
-                .Index(t => t.CategoryId);
+                .ForeignKey("dbo.Categories", t => t.Category_Id)
+                .ForeignKey("dbo.Images", t => t.MainImage_Path)
+                .Index(t => t.Category_Id)
+                .Index(t => t.MainImage_Path);
             
             CreateTable(
                 "dbo.Categories",
@@ -134,21 +137,32 @@ namespace Nettbutikk.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Name = c.String(nullable: false),
                         Description = c.String(nullable: false),
-                        ParentCategoryId = c.Int(),
+                        ParentCategory_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Categories", t => t.ParentCategoryId)
-                .Index(t => t.ParentCategoryId);
+                .ForeignKey("dbo.Categories", t => t.ParentCategory_Id)
+                .Index(t => t.ParentCategory_Id);
+            
+            CreateTable(
+                "dbo.Images",
+                c => new
+                    {
+                        Path = c.String(nullable: false, maxLength: 128),
+                        Product_Id = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Path)
+                .ForeignKey("dbo.Products", t => t.Product_Id, cascadeDelete: true)
+                .Index(t => t.Product_Id);
             
             CreateTable(
                 "dbo.CreditCards",
                 c => new
                     {
                         Number = c.String(nullable: false, maxLength: 128),
-                        NameOnCard = c.String(),
-                        CCV = c.String(),
-                        ExpireYear = c.String(),
-                        ExpireMonth = c.String(),
+                        NameOnCard = c.String(nullable: false),
+                        CCV = c.String(nullable: false, maxLength: 3),
+                        ExpireYear = c.String(nullable: false, maxLength: 2),
+                        ExpireMonth = c.String(nullable: false, maxLength: 2),
                     })
                 .PrimaryKey(t => t.Number);
             
@@ -197,8 +211,10 @@ namespace Nettbutikk.Migrations
             DropForeignKey("dbo.AspNetUsers", "PaymentCard_Number", "dbo.CreditCards");
             DropForeignKey("dbo.Orders", "ShippingAddress_Id", "dbo.Addresses");
             DropForeignKey("dbo.OrderLines", "Product_Id", "dbo.Products");
-            DropForeignKey("dbo.Products", "CategoryId", "dbo.Categories");
-            DropForeignKey("dbo.Categories", "ParentCategoryId", "dbo.Categories");
+            DropForeignKey("dbo.Products", "MainImage_Path", "dbo.Images");
+            DropForeignKey("dbo.Images", "Product_Id", "dbo.Products");
+            DropForeignKey("dbo.Products", "Category_Id", "dbo.Categories");
+            DropForeignKey("dbo.Categories", "ParentCategory_Id", "dbo.Categories");
             DropForeignKey("dbo.OrderLines", "Order_Id", "dbo.Orders");
             DropForeignKey("dbo.Orders", "Customer_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Orders", "BillingAddress_Id", "dbo.Addresses");
@@ -207,8 +223,10 @@ namespace Nettbutikk.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.Categories", new[] { "ParentCategoryId" });
-            DropIndex("dbo.Products", new[] { "CategoryId" });
+            DropIndex("dbo.Images", new[] { "Product_Id" });
+            DropIndex("dbo.Categories", new[] { "ParentCategory_Id" });
+            DropIndex("dbo.Products", new[] { "MainImage_Path" });
+            DropIndex("dbo.Products", new[] { "Category_Id" });
             DropIndex("dbo.OrderLines", new[] { "Product_Id" });
             DropIndex("dbo.OrderLines", new[] { "Order_Id" });
             DropIndex("dbo.Orders", new[] { "ShippingAddress_Id" });
@@ -226,6 +244,7 @@ namespace Nettbutikk.Migrations
             DropTable("dbo.ZipCodes");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.CreditCards");
+            DropTable("dbo.Images");
             DropTable("dbo.Categories");
             DropTable("dbo.Products");
             DropTable("dbo.OrderLines");

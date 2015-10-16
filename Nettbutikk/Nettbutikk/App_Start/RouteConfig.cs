@@ -12,45 +12,54 @@ namespace Nettbutikk
 
             routes.MapMvcAttributeRoutes();
 
-            routes.MapRoute(
-                name: "ProductDetailsById",
-                url: "product/{id}",
-                defaults: new
-                {
-                    controller = "Products",
-                    action = "Details"
-                }
-            );
-            
-            routes.MapRoute(
-                name: "ProductActions",
-                url: "product/{id}/{action}",
-                defaults: new {
-                    controller = "Products"
-                }
-            );
+            //routes.MapRoute(
+            //    name: "ProductDetailsById",
+            //    url: "product/{id}",
+            //    defaults: new
+            //    {
+            //        controller = "Products",
+            //        action = "Details"
+            //    }
+            //);
+
+            //routes.MapRoute(
+            //    name: "ProductActions",
+            //    url: "product/{id}/{action}",
+            //    defaults: new {
+            //        controller = "Products"
+            //    }
+            //);
+
+            //routes.MapRoute(
+            //    name: "ProductsByCategory",
+            //    url: "category/{id}",
+            //    defaults: new { controller = "Categories", action = "Products" }
+            //);
+
+            //routes.MapRoute(
+            //    name: "Categories",
+            //    url: "category/{id}/{action}",
+            //    defaults: new
+            //    {
+            //        controller = "Categories"
+            //    }
+            //);
+
+            //routes.MapRoute(
+            //    name: "AccountManagement",
+            //    url: "account/{action}",
+            //    defaults: new
+            //    {
+            //        controller = "Account.ManageController",
+            //        action = "Index"
+            //    });
 
             routes.MapRoute(
-                name: "CategoryByName",
-                url: "category/{id}",
-                defaults: new { controller = "Categories", action = "Products" }
-            );
-
-            routes.MapRoute(
-                name: "Categories",
-                url: "category/{id}/{action}",
-                defaults: new
-                {
-                    controller = "Categories"
-                }
-            );
-
-            routes.MapRoute(
-                name: "AccountManagement",
+                "Account",
                 url: "account/{action}",
                 defaults: new
                 {
-                    controller = "Account.ManageControllergit ",
+                    controller = "AccountController",
                     action = "Index"
                 });
 

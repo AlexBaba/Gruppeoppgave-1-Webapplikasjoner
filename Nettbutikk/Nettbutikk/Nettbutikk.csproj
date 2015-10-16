@@ -250,9 +250,13 @@
     <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Infrastructure\Routes\Constraints.Guid.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
-    <Compile Include="Migrations\201510140944376_Initial.cs" />
-    <Compile Include="Migrations\201510140944376_Initial.Designer.cs">
-      <DependentUpon>201510140944376_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201510160911072_Initial.cs" />
+    <Compile Include="Migrations\201510160911072_Initial.Designer.cs">
+      <DependentUpon>201510160911072_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510160927181_ProductImageUrl.cs" />
+    <Compile Include="Migrations\201510160927181_ProductImageUrl.Designer.cs">
+      <DependentUpon>201510160927181_ProductImageUrl.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
@@ -266,6 +270,7 @@
     <Compile Include="Models\CreditCard.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderLine.cs" />
+    <Compile Include="Models\Picture.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ZipCode.cs" />
@@ -372,10 +377,14 @@
     <None Include="Project_Readme.html" />
     <Content Include="Views\Home\Product_ListItem.cshtml" />
     <Content Include="Views\Shared\_LoginModal.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510140944376_Initial.resx">
-      <DependentUpon>201510140944376_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510160911072_Initial.resx">
+      <DependentUpon>201510160911072_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510160927181_ProductImageUrl.resx">
+      <DependentUpon>201510160927181_ProductImageUrl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

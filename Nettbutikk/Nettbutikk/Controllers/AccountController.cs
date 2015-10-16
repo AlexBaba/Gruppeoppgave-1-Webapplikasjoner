@@ -11,7 +11,6 @@ namespace Nettbutikk.Controllers
 {
     public class AccountController : Account.BaseController
     {
-        //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -19,8 +18,7 @@ namespace Nettbutikk.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-
-        //
+        
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
@@ -40,10 +38,15 @@ namespace Nettbutikk.Controllers
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode",
+                        new { ReturnUrl = returnUrl,
+                              RememberMe = model.RememberMe });
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -51,7 +54,6 @@ namespace Nettbutikk.Controllers
             }
         }
 
-        //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
@@ -61,10 +63,10 @@ namespace Nettbutikk.Controllers
             {
                 return View("Error");
             }
+
             return View(new VerifyAccountCode { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
-
-        //
+        
         // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
@@ -76,17 +78,19 @@ namespace Nettbutikk.Controllers
                 return View(model);
             }
 
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager
+                .TwoFactorSignInAsync(model.Provider, model.Code,
+                    isPersistent: model.RememberMe,
+                    rememberBrowser: model.RememberBrowser);
+
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(model.ReturnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid code.");
@@ -94,7 +98,6 @@ namespace Nettbutikk.Controllers
             }
         }
 
-        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -102,37 +105,38 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterAccount accountRegistration)
+        public async Task<ActionResult> Register(RegisterAccount model)
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = accountRegistration.Email, Email = accountRegistration.Email };
-                var result = await UserManager.CreateAsync(user, accountRegistration.Password);
+                var user = new User
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user,
+                        isPersistent:false, rememberBrowser:false);
                     
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
-            return View(accountRegistration);
+            return View(model);
         }
 
-        //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
@@ -145,7 +149,6 @@ namespace Nettbutikk.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
-        //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
         public ActionResult ForgotPassword()
@@ -153,7 +156,6 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
         // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
@@ -181,7 +183,6 @@ namespace Nettbutikk.Controllers
             return View(forgottenPasword);
         }
 
-        //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
@@ -189,7 +190,6 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
@@ -197,7 +197,6 @@ namespace Nettbutikk.Controllers
             return code == null ? View("Error") : View();
         }
 
-        //
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
@@ -223,7 +222,6 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
         // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
@@ -231,7 +229,6 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
@@ -242,7 +239,6 @@ namespace Nettbutikk.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
         // GET: /Account/SendCode
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
@@ -257,7 +253,6 @@ namespace Nettbutikk.Controllers
             return View(new RegisterAccountSendCode { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //
         // POST: /Account/SendCode
         [HttpPost]
         [AllowAnonymous]
@@ -277,7 +272,6 @@ namespace Nettbutikk.Controllers
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
-        //
         // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
@@ -307,7 +301,6 @@ namespace Nettbutikk.Controllers
             }
         }
 
-        //
         // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
@@ -345,7 +338,6 @@ namespace Nettbutikk.Controllers
             return View(model);
         }
 
-        //
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -355,12 +347,17 @@ namespace Nettbutikk.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        //GET /Account/Index
+        public ActionResult Index()
+        {
+            return View(UserManager.FindById(User.Identity.GetUserId()));
         }
     }
 }
