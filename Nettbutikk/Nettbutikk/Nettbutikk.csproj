@@ -217,43 +217,55 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\Account\AddressController.cs" />
-    <Compile Include="Controllers\Account\BaseController.cs" />
-    <Compile Include="Controllers\Account\PasswordController.cs" />
-    <Compile Include="Controllers\Account\PhoneController.cs" />
-    <Compile Include="Controllers\Admin\CategoriesAdminController.cs" />
-    <Compile Include="Controllers\Admin\ProductsAdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\Account\ManageController.cs" />
-    <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="DAL\NettbutikkContext.cs" />
-    <Compile Include="DAL\DB.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="DbSeed.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\User.cs" />
-    <Compile Include="Infrastructure\Routes\Constraints.Guid.cs" />
-    <Compile Include="Migrations\201510061040500_Initial.cs" />
-    <Compile Include="Migrations\201510061040500_Initial.Designer.cs">
-      <DependentUpon>201510061040500_Initial.cs</DependentUpon>
+    <Compile Include="Helpers\AccountsHelper.cs" />
+    <Compile Include="Helpers\CategoryHelper.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Infrastructure\CookieHandler.cs" />
+    <Compile Include="Migrations\201510161006096_initial.cs" />
+    <Compile Include="Migrations\201510161006096_initial.Designer.cs">
+      <DependentUpon>201510161006096_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510161157332_Cart.cs" />
+    <Compile Include="Migrations\201510161157332_Cart.Designer.cs">
+      <DependentUpon>201510161157332_Cart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510161318317_Another.cs" />
+    <Compile Include="Migrations\201510161318317_Another.Designer.cs">
+      <DependentUpon>201510161318317_Another.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
+    <Compile Include="Models\Binding\AccountViewModels.cs" />
     <Compile Include="Models\Binding\Category.cs" />
+    <Compile Include="Models\Binding\Checkout.cs" />
     <Compile Include="Models\Binding\Manage.cs" />
+    <Compile Include="Models\Binding\ManageViewModels.cs" />
     <Compile Include="Models\Binding\Product.cs" />
+    <Compile Include="Models\Binding\Receipt.cs" />
     <Compile Include="Models\Binding\Search.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderLine.cs" />
+    <Compile Include="Models\Picture.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\CustomerLoginPartial.cs" />
-    <Compile Include="Models\CustomerRegisterPartial.cs" />
-    <Compile Include="Models\WebShopModel.cs" />
+    <Compile Include="Models\ZipCode.cs" />
+    <Compile Include="NettbutikkContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -315,8 +327,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Password\" />
-    <Folder Include="Views\Phone\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -352,17 +362,21 @@
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\Categories\Create.cshtml" />
-    <Content Include="Views\Categories\Delete.cshtml" />
-    <Content Include="Views\Categories\Details.cshtml" />
-    <Content Include="Views\Categories\Edit.cshtml" />
-    <Content Include="Views\Categories\Index.cshtml" />
-    <Content Include="secrets.config" />
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Products\_SearchResults.cshtml" />
     <Content Include="Views\Products\_SearchResultRow.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201510161006096_initial.resx">
+      <DependentUpon>201510161006096_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510161157332_Cart.resx">
+      <DependentUpon>201510161157332_Cart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510161318317_Another.resx">
+      <DependentUpon>201510161318317_Another.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -373,11 +387,6 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510061040500_Initial.resx">
-      <DependentUpon>201510061040500_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
