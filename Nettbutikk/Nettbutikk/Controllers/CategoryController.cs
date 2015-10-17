@@ -14,38 +14,42 @@ namespace Nettbutikk.Controllers
             return View(await db.Categories.ToListAsync());
         }
 
-        // GET: Category/Details/5
+        [ActionName("Products")]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Category category = await db.Categories.FindAsync(id);
+
             if (category == null)
             {
                 return HttpNotFound();
             }
+
             return View(category);
         }
 
-        // GET: Category/Create
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: Category/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description")] Category category)
         {
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
+
                 await db.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
 
@@ -53,17 +57,21 @@ namespace Nettbutikk.Controllers
         }
 
         // GET: Category/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Category category = await db.Categories.FindAsync(id);
+
             if (category == null)
             {
                 return HttpNotFound();
             }
+
             return View(category);
         }
 
@@ -71,41 +79,53 @@ namespace Nettbutikk.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description")] Category category)
+        public async Task<ActionResult> Edit([Bind(Include = "Name,Description,ParentCategory")] Category category)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
+
                 await db.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
+
             return View(category);
         }
 
         // GET: Category/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Category category = await db.Categories.FindAsync(id);
+
             if (category == null)
             {
                 return HttpNotFound();
             }
+
             return View(category);
         }
 
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Category category = await db.Categories.FindAsync(id);
+
             db.Categories.Remove(category);
+
             await db.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
@@ -115,6 +135,7 @@ namespace Nettbutikk.Controllers
             {
                 db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

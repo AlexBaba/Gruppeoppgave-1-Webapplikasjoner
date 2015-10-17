@@ -10,6 +10,11 @@ namespace Nettbutikk.Controllers
 {
     public class HomeController : BaseController
     {
+        public ActionResult Search(string term)
+        {
+            return View(db.Products.Where((product) => product.Description.Contains(term)).ToList());
+        }
+
         public ActionResult Index()
         {
             ViewBag.Categories = db.Categories.ToList();

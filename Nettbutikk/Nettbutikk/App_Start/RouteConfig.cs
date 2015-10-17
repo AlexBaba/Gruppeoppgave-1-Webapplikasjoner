@@ -14,6 +14,12 @@ namespace Nettbutikk
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "ProductsForCategory",
+                url: "category/{id}/products",
+                defaults: new { controller = "Category", action = "products" }
+            );
+
+            routes.MapRoute(
                 name: "Account",
                 url: "Account/{action}",
                 defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }
