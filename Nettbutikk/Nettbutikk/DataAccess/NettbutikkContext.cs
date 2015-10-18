@@ -19,7 +19,7 @@ namespace Nettbutikk.DataAccess
         public DbSet<OrderLine> OrderLines { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ZipCode> ZipCodes { get; set; }
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<ShoppingCart> Carts { get; set; }
         public DbSet<Image> Images { get; set; }
 
 

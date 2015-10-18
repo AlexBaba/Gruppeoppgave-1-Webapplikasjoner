@@ -6,50 +6,15 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.Models;
+using Nettbutikk.Infrastructure;
+using Nettbutikk.Models.Binding;
+using System;
 
 namespace Nettbutikk.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private SignInManager _signInManager;
-        private UserManager _userManager;
-
-        public AccountController()
-        {
-        }
-
-        public AccountController(UserManager userManager, SignInManager signInManager )
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
-        public SignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<SignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
-        }
-
-        public UserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<UserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -57,35 +22,38 @@ namespace Nettbutikk.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-
-        //
+        
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            var user = UserManager.FindByEmail(model.Email);
+            var result = SignInManager.PasswordSignIn(model.Email, model.Password, model.RememberMe, false);
+            if (SignInStatus.Success == result)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                Session["LoggedIn"] = true;
+                Session["Email"] = model.Email;
+                ViewBag.LoggedIn = true;
             }
+            else
+            {
+                Session["LoggedIn"] = false;
+                ViewBag.LoggedIn = false;
+            }
+
+            return RedirectToLocal(returnUrl);
+        }
+
+        protected void Logout()
+        {
+            Session.Abandon();
+            ViewBag.LoggedIn = false;
         }
 
         //
@@ -117,7 +85,7 @@ namespace Nettbutikk.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -139,34 +107,130 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public bool Register(RegisterViewModel customer, string returnUrl)
+        {
+            if (DB.RegisterCustomer(customer))
+            {
+                Session["LoggedIn"] = true;
+                Session["Email"] = customer.Email;
+                RedirectToAction("Index", "Home");
+                return true;
+            }
+            return false;
+        }
+
+
+        public ActionResult MyPage()
+        {
+            if (!LoginStatus())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            string Email = (string)Session["Email"];
+            var Customer = DB.GetCustomerByEmail(Email);
+            
+            var cust = db.Users.Where(c => c.Email == Email).Select(c => new EditAccount()
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                Addresses = c.Addresses
+            }).FirstOrDefault();
+
+            var orderList = Customer.Orders.ToList();
+
+            ViewBag.LoggedIn = LoginStatus();
+            ViewBag.Customer = cust;
+            ViewBag.OrderList = orderList;
+
+            return View();
+        }
+
+        [HttpPost]
+        public bool UpdateCustomerInfo(EditAccount customerEdit, string returnUrl)
+        {
+            return DB.UpdateCustomer(customerEdit, (string)Session["Email"]);
+        }
+
+        [HttpPost]
+        public ActionResult UpdatePersonData(EditAccount customerEdit, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (DB.UpdateCustomer(customerEdit, (string)Session["Email"]))
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("MyPage");
                 }
-                AddErrors(result);
             }
+            return Redirect(returnUrl);
+        }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+        [HttpPost]
+        public bool ChangePassword2(string CurrentPw, string NewPw)
+        {
+
+            var Email = (string)Session["Email"];
+
+            AccountLogin login = new AccountLogin()
+            {
+                Email = Email,
+                Password = CurrentPw
+            };
+            if (DB.AttemptLogin(login))
+            {
+                try
+                {
+                    var newPasswordHash = DB.PasswordHash(NewPw);
+                    //var credentials = db.CustomerCredentials.Find(Email);
+                    //credentials.Password = newPasswordHash;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(ChangeAccountPassword changePw, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                var Email = (string)Session["Email"];
+
+                AccountLogin login = new AccountLogin()
+                {
+                    Email = Email,
+                    Password = changePw.OldPassword
+                };
+                if (DB.AttemptLogin(login))
+                {
+                    var newPasswordHash = DB.PasswordHash(changePw.NewPassword);
+// TODO:                    //var credentials = db.CustomerCredentials.Find(Email);
+                    //credentials.Password = newPasswordHash;
+                    db.SaveChanges();
+
+                    return RedirectToAction("MyPage");
+                }
+            }
+            return Redirect(returnUrl);
+        }
+
+
+        public bool LoginStatus()
+        {
+            bool LoggedIn = false;
+            if (Session["LoggedIn"] != null)
+            {
+                LoggedIn = (bool)Session["LoggedIn"];
+            }
+            return LoggedIn;
         }
 
         //
@@ -400,54 +464,7 @@ namespace Nettbutikk.Controllers
             return View();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_userManager != null)
-                {
-                    _userManager.Dispose();
-                    _userManager = null;
-                }
-
-                if (_signInManager != null)
-                {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-
         #region Helpers
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {
@@ -477,6 +494,7 @@ namespace Nettbutikk.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+
         #endregion
     }
 }

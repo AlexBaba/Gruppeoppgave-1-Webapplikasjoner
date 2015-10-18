@@ -12,7 +12,7 @@ namespace Nettbutikk.Infrastructure
 {
     public class CookieHandler
     {
-        internal static HttpCookie SHOPPING_CART_COOKIE = new HttpCookie("cart");
+        internal static HttpCookie SHOPPING_CART_COOKIE = new HttpCookie("shoppingcart");
 
         public const string CART_SIZE_COOKIE = "cart_size";
         public const string PRODUCT = "product";

@@ -31,10 +31,36 @@ namespace Nettbutikk.Models
         [InverseProperty("Customer")]
         public virtual ICollection<Order> Orders { get; set; }
 
+        [InverseProperty("User")]
+        public virtual Credential Cred { get; set; }
+
         public string FullName
         {
             get {
                 return this.FirstName + " " + this.LastName;
+            }
+        }
+
+        public class Credential
+        {
+            [Key]
+            [Required]
+            public string UserId
+            {
+                get;
+                set;
+            }
+
+            [Required]
+            public virtual User User
+            {
+                get;
+                set;
+            }
+
+            [Required]
+            public byte[] Password {
+                get; set;
             }
         }
     }

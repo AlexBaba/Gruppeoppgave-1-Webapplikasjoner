@@ -231,6 +231,7 @@
     <Compile Include="Helpers\CategoryHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Infrastructure\CookieHandler.cs" />
+    <Compile Include="Infrastructure\DB.cs" />
     <Compile Include="Migrations\201510161006096_initial.cs" />
     <Compile Include="Migrations\201510161006096_initial.Designer.cs">
       <DependentUpon>201510161006096_initial.cs</DependentUpon>
@@ -243,6 +244,10 @@
     <Compile Include="Migrations\201510161318317_Another.Designer.cs">
       <DependentUpon>201510161318317_Another.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510181302366_UserCredentials.cs" />
+    <Compile Include="Migrations\201510181302366_UserCredentials.Designer.cs">
+      <DependentUpon>201510181302366_UserCredentials.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Binding\Account.cs" />
@@ -254,7 +259,7 @@
     <Compile Include="Models\Binding\Product.cs" />
     <Compile Include="Models\Binding\Receipt.cs" />
     <Compile Include="Models\Binding\Search.cs" />
-    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CreditCard.cs" />
@@ -397,6 +402,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510161318317_Another.resx">
       <DependentUpon>201510161318317_Another.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510181302366_UserCredentials.resx">
+      <DependentUpon>201510181302366_UserCredentials.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

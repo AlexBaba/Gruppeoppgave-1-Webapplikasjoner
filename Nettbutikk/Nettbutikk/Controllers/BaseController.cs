@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Nettbutikk.DataAccess;
+using Nettbutikk.Infrastructure;
 using Nettbutikk.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,32 +95,20 @@ namespace Nettbutikk.Controllers
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected HttpCookie Cart
         {
-            if (disposing)
+            get
             {
-                if (_userManager != null)
-                {
-                    _userManager.Dispose();
-                    _userManager = null;
-                }
-
-                if (_signInManager != null)
-        {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-
-                if (disposing)
-            {
-                    _db.Dispose();
-                }
+                return Request.Cookies[CookieHandler.SHOPPING_CART_COOKIE.Name] ?? CookieHandler.SHOPPING_CART_COOKIE;
             }
-
-            base.Dispose(disposing);
         }
 
         #region Helpers
+
+        public bool LoginStatus()
+        {
+            return User.Identity.IsAuthenticated;
+        }
 
         protected ActionResult RedirectToLocal(string returnUrl)
         {
@@ -159,5 +148,31 @@ namespace Nettbutikk.Controllers
         }
 
         #endregion Helpers
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_signInManager != null)
+                {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+
+                if (disposing)
+                {
+                    _db.Dispose();
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
     }
 }

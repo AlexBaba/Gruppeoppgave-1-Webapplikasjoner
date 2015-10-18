@@ -5,26 +5,26 @@ namespace Nettbutikk.Controllers
 {
     public class CartController : BaseController
     {
-        // GET: Cart
+        // GET: ShoppingCart
         public ActionResult Index()
         {
-            return View(Cart.GetCart(this));
+            return View(ShoppingCart.GetCart(this));
         }
 
         [HttpPost]
         public ActionResult Add(int? productId, uint? amount)
         {
-            Cart.GetCart(this).Add(db.Products.Find(productId), amount ?? 1);
+            ShoppingCart.GetCart(this).Add(db.Products.Find(productId), amount ?? 1);
             return View("Edit");
         }
 
-        // GET: Cart/Edit/5
+        // GET: ShoppingCart/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Cart/Edit/5
+        // POST: ShoppingCart/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -40,13 +40,13 @@ namespace Nettbutikk.Controllers
             }
         }
         
-        // POST: Cart/Delete/5
+        // POST: ShoppingCart/Delete/5
         [HttpPost]
         public ActionResult Delete(int id)
         {
             try
             {
-                db.Carts.Remove(Cart.GetCart(this));
+                db.Carts.Remove(ShoppingCart.GetCart(this));
 
                 return RedirectToAction("Index");
             }

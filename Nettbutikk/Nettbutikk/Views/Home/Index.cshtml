@@ -5,7 +5,6 @@
     IEnumerable<Product> products = ViewBag.Products;
     int counter = 0;
 }
-<div class="wrapper">
     <div class="categories">
         <ul class="category-list">
             @foreach (var category in categories)
@@ -33,15 +32,13 @@
                 @Html.Partial("Product_ListItem", product)
             </div>
 
-            if (counter % 3 == 0)
+            if (counter % 3 == 0 || products.Count() <= counter)
             {
                 @Html.Raw("</div>")
             }
         }
 
     </div>
-
-</div>
 
 <script>
     $(document).ready(function () {
@@ -55,7 +52,7 @@
             $.ajax({
                 url: '@Url.Action("AddToCart","Home")',
                 data: {
-                    ProductId:$(this).attr("id")
+                    ProductId: $(this).attr("id")
                 },
                 method: "POST",
                 success: function (result) {
@@ -65,8 +62,8 @@
                     //window.location.href = result;
                     alert(JSON.stringify(result));
                 }
-
+                
+            })
         })
-    })
     })
 </script>

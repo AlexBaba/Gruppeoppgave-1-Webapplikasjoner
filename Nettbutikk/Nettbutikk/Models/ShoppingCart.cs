@@ -8,9 +8,9 @@ using System.Web.Mvc;
 
 namespace Nettbutikk.Models
 {
-    public class Cart
+    public class ShoppingCart
     {
-        public const string SessionKey = "Cart";
+        public const string SessionKey = "ShoppingCart";
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -21,9 +21,9 @@ namespace Nettbutikk.Models
         
         public virtual ICollection<CartItem> Items { get; set; }
         
-        public static Cart GetCart(HttpContextBase context)
+        public static ShoppingCart GetCart(HttpContextBase context)
         {
-            var cart = new Cart();
+            var cart = new ShoppingCart();
             cart.Id = cart.GetCartId(context);
             return cart;
         }
@@ -68,7 +68,7 @@ namespace Nettbutikk.Models
             return context.Session[SessionKey].ToString();
         }
 
-        public static Cart GetCart(Controller controller)
+        public static ShoppingCart GetCart(Controller controller)
         {
             return GetCart(controller.HttpContext);
         }

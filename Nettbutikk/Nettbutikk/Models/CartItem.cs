@@ -9,7 +9,7 @@ namespace Nettbutikk.Models
         public Guid Id { get; set; }
 
         [Required]
-        public virtual Cart Cart { get; set; }
+        public virtual ShoppingCart Cart { get; set; }
         
         [Required]
         public virtual Product Product { get; set; }

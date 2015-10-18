@@ -158,7 +158,10 @@ namespace Nettbutikk.Models.Binding
     public class EditAccount
     {
         [Required]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
 
         [Required]
         public string Email { get; set; }
@@ -172,6 +175,8 @@ namespace Nettbutikk.Models.Binding
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public IEnumerable<Address> Addresses { get; set; }
     }
 
     public class RegisterAccountPhone
