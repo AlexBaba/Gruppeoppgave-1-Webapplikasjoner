@@ -65,5 +65,6 @@ namespace Nettbutikk.Models.Binding
         }
         public User Buyer { get; set; }
         public Order Order { get; set; }
+        public object Message { get; internal set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Nettbutikk.Infrastructure
 {
     public class CookieHandler
     {
+        internal static HttpCookie SHOPPING_CART_COOKIE = new HttpCookie("cart");
 
         public const string CART_SIZE_COOKIE = "cart_size";
         public const string PRODUCT = "product";
@@ -19,6 +20,7 @@ namespace Nettbutikk.Infrastructure
         //The default is given in days
         public const int DEFAULT_EXPIRATION = 1;
 
+        
         public static bool doesCookieExist(string cookieIdentifier)
         {
             return HttpContext.Current.Request.Cookies[cookieIdentifier] != null;
@@ -86,6 +88,10 @@ namespace Nettbutikk.Infrastructure
 
         }
 
+        internal static void deleteCookie(object sHOPPING_CART_COOKIE)
+        {
+            throw new NotImplementedException();
+        }
 
         public static string createCookieStr(string[] values)
         {

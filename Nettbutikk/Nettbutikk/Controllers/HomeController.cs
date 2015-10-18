@@ -31,8 +31,9 @@ namespace Nettbutikk.Controllers
         [HttpPost]
         public int AddToCart(int ProductId)
         {
-            var cookie = Request.Cookies["Shoppingcart"] ?? new HttpCookie("Shoppingcart");
+            var cookie = Request.Cookies[CookieHandler.SHOPPING_CART_COOKIE.Name] ?? CookieHandler.SHOPPING_CART_COOKIE;
             int numProduct;
+
             try
             {
                 numProduct = Convert.ToInt32(cookie[ProductId.ToString()]);
@@ -42,66 +43,51 @@ namespace Nettbutikk.Controllers
             {
                 numProduct = 1;
             }
+
             cookie[ProductId.ToString()] = numProduct.ToString();
             Response.Cookies.Add(cookie);
 
             var list = cookie.Values;
             var numItemsInCart = 0;
+
             foreach (var c in list)
             {
                 var count = Convert.ToInt32(cookie[c.ToString()]);
                 numItemsInCart += count;
             }
+
             return numItemsInCart;
         }
 
         public ActionResult Receipt()
         {
 
-            if (CookieHandler.getCartSize() < 1)
-            {
-                //return View("Error");
-            }
-            else if (Session["User"] == null)
-            {
-                System.Diagnostics.Debug.WriteLine("No user found!");
-                Session["User"] = "alex.gaard@hotmail.com";
-                //return View("Error");
-            }
-
-            System.Diagnostics.Debug.WriteLine("Logged in as: " + Session["User"].ToString());
-
             ReceiptViewModel viewModel = new ReceiptViewModel();
 
-            db.Orders.Add(viewModel.Order);
+            if (viewModel.Message != null) {
+                return View(viewModel);
+            }
+
+            var order = db.Orders.Add(viewModel.Order);
             db.SaveChanges();
 
-            int bestillingId = db.Orders.ToArray().Count();
-            int bestillinger = viewModel.Products.Count;
+            var lines = viewModel.Products.Zip(viewModel.Amounts,
+                (product, amount) =>
+                    new OrderLine()
+                    {
+                        Order = viewModel.Order,
+                        Product = product,
+                        Amount = amount
+                    });
 
-            for (int i = 0; i < bestillinger; i++)
+            foreach (var line in lines)
             {
-                OrderLine line = new OrderLine();
-                line.Order = viewModel.Order;
-                line.Product = viewModel.Products[i];
-                line.Amount = viewModel.Amounts[i];
                 db.OrderLines.Add(line);
             }
 
             db.SaveChanges();
 
-            /*
-            //Remove all elements from the cart
-            for (int i = 1; i <= elements; i++)
-            {
-                string current = Convert.ToString(i);
-                System.Diagnostics.Debug.WriteLine("Deleting cookie: " + current);
-                CookieHandler.deleteCookie(CookieHandler.getCookie(CookieHandler.PRODUCT + current));
-            }
-
-            System.Diagnostics.Debug.WriteLine("Delete cart size cookie");
-            CookieHandler.deleteCookie(cartSizeCookie);
-            */
+            CookieHandler.deleteCookie(CookieHandler.SHOPPING_CART_COOKIE);
 
             return View(viewModel);
         }
