@@ -44,7 +44,7 @@ namespace Nettbutikk.DAL
 
             customerModel =  new Customer()
             {
-                CustomerId = 1,
+                Id = 1,
                 Email = "ole@gmail.com",
                 Firstname = "Ole",
                 Lastname = "Olsen",

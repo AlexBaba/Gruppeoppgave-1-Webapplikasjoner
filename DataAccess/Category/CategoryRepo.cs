@@ -1,8 +1,8 @@
 ﻿using Nettbutikk.Model;
+using Nettbutikk.Model.RemovedEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace Nettbutikk.DataAccess
 {
@@ -11,7 +11,7 @@ namespace Nettbutikk.DataAccess
         public Category GetCategory(int CategoryId)
         {
             try {
-                return new TankshopDbContext().Categories.FirstOrDefault(i => i.CategoryId == CategoryId);
+                return new TankshopDbContext().Categories.FirstOrDefault(c => c.CategoryId == CategoryId);
             }
             catch (Exception e) {
                 //LogHandler.WriteToLog(e);
@@ -34,13 +34,13 @@ namespace Nettbutikk.DataAccess
         }
 
 
-        public bool AddCategory(string CategoryId)
+        public bool AddCategory(string name)
         {
 
             try
             {
                 var db = new TankshopDbContext();
-                db.Categories.Add(new Category() {CategoryId = Convert.ToInt32(CategoryId) });
+                db.Categories.Add(new Category() { Name = name});
                 db.SaveChanges();
                 return true;
             }
@@ -55,7 +55,7 @@ namespace Nettbutikk.DataAccess
 
             var db = new TankshopDbContext();
 
-            Category category = (from i in db.Categories where i.CategoryId == CategoryId select i).FirstOrDefault();
+            Category category = (from c in db.Categories where c.CategoryId == CategoryId select c).FirstOrDefault();
 
             if (category == null)
             {
@@ -67,25 +67,49 @@ namespace Nettbutikk.DataAccess
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { }
+            catch (Exception e) { }//LogHandler.WriteToLog(e); }
 
             return false;
         }
 
-        public bool UpdateCategory(int CategoryId, string CategoryName)
+        public bool UpdateCategory(int CategoryId, string Name)
         {
 
             var db = new TankshopDbContext();
 
-            Category category = (from i in db.Categories where i.CategoryId == CategoryId select i).FirstOrDefault();
+            Category category = (from c in db.Categories where c.CategoryId == CategoryId select c).FirstOrDefault();
 
             if (category == null)
             {
                 return false;
             }
-            
-            category.Name = CategoryName;
 
+            category.CategoryId = CategoryId;
+            category.Name = Name;
+
+
+            try {
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception e) { }//LogHandler.WriteToLog(e); }
+
+            return false;
+        }
+
+
+        //OldCategory
+        public bool AddOldCategory(string Name, int adminId)
+        {
+
+            var db = new TankshopDbContext();
+            OldCategory oldCategory = new OldCategory();
+
+            oldCategory.Name = Name;
+            oldCategory.Changer = db.Admins.Find(adminId);
+            oldCategory.Changed = DateTime.Now;
+
+            db.OldCategories.Add(oldCategory);
 
             try {
                 db.SaveChanges();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nettbutikk.Model;
 using Nettbutikk.Model.RemovedEntities;
+using System.Data.Entity;
 
 namespace Nettbutikk.DataAccess
 {
@@ -42,7 +43,7 @@ namespace Nettbutikk.DataAccess
             try
             {
                 var db = new TankshopDbContext();
-                db.Images.Add(new Image() { ProductId = productId, ImageUrl = imageUrl });
+                db.Images.Add(new Image() { Product = new Product { Id = productId }, ImageUrl = imageUrl });
                 db.SaveChanges();
                 return true;
             }
@@ -86,28 +87,30 @@ namespace Nettbutikk.DataAccess
                 return false;
             }
 
-            img.ProductId = productId;
+            img.Product = new Product { Id = productId };
             img.ImageUrl = imageUrl;
 
+            db.Entry(img).State = EntityState.Modified;
 
             try {
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { }//LogHandler.WriteToLog(e); }
+            catch (Exception e) {
+            }
 
             return false;
         }
 
 
         //OldImage
-        public bool AddOldImage(int productId, string imageUrl, Admin admin)
+        public bool AddOldImage(Image image, Admin admin)
         {
             var db = new TankshopDbContext();
             OldImage oldImage = new OldImage();
 
-            oldImage.ProductId = productId;
-            oldImage.ImageUrl = imageUrl;
+            oldImage.Product = image.Product;
+            oldImage.ImageUrl = image.ImageUrl;
             oldImage.Changer = admin;
             oldImage.Changed = DateTime.Now;
             

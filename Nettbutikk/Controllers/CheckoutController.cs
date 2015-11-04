@@ -51,7 +51,7 @@ namespace Nettbutikk.Controllers
                         Address = customerModel.Address,
                         Zipcode = customerModel.Zipcode,
                         City = customerModel.City,
-                        Id = customerModel.CustomerId,
+                        Id = customerModel.Id,
                         Email = customerModel.Email
 
                     };
@@ -98,7 +98,7 @@ namespace Nettbutikk.Controllers
                         });
                     }
                     order.Orderlines = orderlines;
-                    order.CustomerId = new AccountBLL().GetCustomer(Session["Email"] as string).CustomerId;
+                    order.CustomerId = new AccountBLL().GetCustomer(Session["Email"] as string).Id;
                     order.Date = DateTime.Now;
                     var OrderId = _orderBLL.PlaceOrder(order);
 

@@ -25,10 +25,10 @@ namespace Nettbutikk.Controllers.Tests
             //Arrange
             var controller = new ImageController(new ImageBLL(new ImageRepoStub()));
             var expectedResults = new List<Image> {
-                new Image { ImageId = 1, ProductId = 1, ImageUrl = "test1"},
-                new Image { ImageId = 2, ProductId = 2, ImageUrl = "test2"},
-                new Image { ImageId = 3, ProductId = 3, ImageUrl = "test3"},
-                new Image { ImageId = 4, ProductId = 4, ImageUrl = "test4"}
+                new Image { ImageId = 1, Product = new Product { Id = 1 }, ImageUrl = "test1"},
+                new Image { ImageId = 2, Product = new Product { Id = 2 }, ImageUrl = "test2"},
+                new Image { ImageId = 3, Product = new Product { Id = 3 }, ImageUrl = "test3"},
+                new Image { ImageId = 4, Product = new Product { Id = 4 }, ImageUrl = "test4"}
             };
 
 
@@ -43,7 +43,7 @@ namespace Nettbutikk.Controllers.Tests
             for (int i = 0; i < actualResults.Count; i++)
             {
                 Assert.AreEqual(expectedResults[i].ImageId, actualResults[i].ImageId);
-                Assert.AreEqual(expectedResults[i].ProductId, actualResults[i].ProductId);
+                Assert.AreEqual(expectedResults[i].Product.Id, actualResults[i].ProductId);
                 Assert.AreEqual(expectedResults[i].ImageUrl, actualResults[i].ImageUrl);
             }
 
@@ -58,7 +58,7 @@ namespace Nettbutikk.Controllers.Tests
             //Arrange
             var controller = new ImageController(new IService[] { new ImageBLL(new ImageRepoStub()), new ProductService(new ProductRepository(new TankshopDbContext())) });
 
-            var expectedImage = new Image { ImageId = 1, ProductId = 1, ImageUrl = "test" };
+            var expectedImage = new Image { ImageId = 1, Product = new Product { Id = 1 }, ImageUrl = "test" };
             var allProducts = new List<Product> {
                 new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
                 new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
@@ -96,7 +96,7 @@ namespace Nettbutikk.Controllers.Tests
             //Arrange
             var controller = new ImageController(new IService[] { new ImageBLL(new ImageRepoStub()), new ProductService(new ProductRepository(new TankshopDbContext())) });
 
-            var expectedImage = new Image { ImageId = 1, ProductId = 1, ImageUrl = "test" };
+            var expectedImage = new Image { ImageId = 1, Product = new Product { Id = 1 }, ImageUrl = "test" };
             var allProducts = new List<Product> {
                 new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
                 new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
@@ -181,7 +181,7 @@ namespace Nettbutikk.Controllers.Tests
             var controller = new ImageController(new ImageBLL(new ImageRepoStub()));
             string imageId = "2";
 
-            Image expectedResult = new Image { ImageId = 2, ProductId = 1, ImageUrl = "test" };
+            Image expectedResult = new Image { ImageId = 2, Product = new Product { Id = 1 }, ImageUrl = "test" };
 
             //Act
             var viewResult = controller.DeleteImage(imageId) as ViewResult;
@@ -189,7 +189,7 @@ namespace Nettbutikk.Controllers.Tests
 
             //Assert
             Assert.AreEqual(expectedResult.ImageId, actualResult.ImageId);
-            Assert.AreEqual(expectedResult.ProductId, actualResult.ProductId);
+            Assert.AreEqual(expectedResult.Product.Id, actualResult.ProductId);
             Assert.AreEqual(expectedResult.ImageUrl, actualResult.ImageUrl);
 
             Assert.AreEqual("", viewResult.ViewName);

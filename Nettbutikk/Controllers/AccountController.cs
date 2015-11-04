@@ -71,6 +71,7 @@ namespace Nettbutikk.Controllers
                 RedirectToAction("Index", "Home");
                 return true;
             }
+
             return false;
         }
 
@@ -86,7 +87,7 @@ namespace Nettbutikk.Controllers
             var Customer = _accountBLL.GetCustomer(Email);
             var customerView = new CustomerView()
             {
-                Id= Customer.CustomerId,
+                Id= Customer.Id,
                 Email = Customer.Email,
                 Firstname = Customer.Firstname,
                 Lastname = Customer.Lastname,

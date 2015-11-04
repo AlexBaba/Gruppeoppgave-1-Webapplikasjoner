@@ -34,5 +34,6 @@ namespace Nettbutikk.Model
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<OldProduct> OldProducts { get; set; }
         public virtual DbSet<OldImage> OldImages { get; set; }
+        public virtual DbSet<OldCategory> OldCategories { get; set; }
     }
 }

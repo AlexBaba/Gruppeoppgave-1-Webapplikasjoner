@@ -10,9 +10,9 @@ namespace Nettbutikk.DataAccess
             return productId != -1;
         }
 
-        public bool AddOldImage(int productId, string imageUrl, Admin changer)
+        public bool AddOldImage(Image image, Admin changer)
         {
-            return productId != -1;
+            return image.Product.Id != -1;
         }
 
         public bool DeleteImage(int imageId)
@@ -23,10 +23,10 @@ namespace Nettbutikk.DataAccess
         public List<Image> GetAllImages()
         {
             var allImages = new List<Image> {
-                new Image { ImageId = 1, ProductId = 1, ImageUrl = "test1"},
-                new Image { ImageId = 2, ProductId = 2, ImageUrl = "test2"},
-                new Image { ImageId = 3, ProductId = 3, ImageUrl = "test3"},
-                new Image { ImageId = 4, ProductId = 4, ImageUrl = "test4"}
+                new Image { ImageId = 1, Product = new Product { Id = 1 }, ImageUrl = "test1"},
+                new Image { ImageId = 2, Product = new Product { Id = 2 }, ImageUrl = "test2"},
+                new Image { ImageId = 3, Product = new Product { Id = 3 }, ImageUrl = "test3"},
+                new Image { ImageId = 4, Product = new Product { Id = 4 }, ImageUrl = "test4"}
             };
 
             return allImages;
@@ -36,7 +36,7 @@ namespace Nettbutikk.DataAccess
         public Image GetImage(int imageId)
         {
             
-            return imageId == -1 ? null : new Image { ImageId = imageId, ProductId = 1, ImageUrl = "test"};
+            return imageId == -1 ? null : new Image { ImageId = imageId, Product = new Product { Id = 1 }, ImageUrl = "test"};
         }
 
 
