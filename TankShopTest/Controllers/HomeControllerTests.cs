@@ -52,9 +52,9 @@ namespace Nettbutikk.Controllers.Tests
             var categoryId = 1;
             var result = Controller.Category(categoryId) as ViewResult;
             
-            Assert.IsInstanceOfType(result.Model, typeof(HomeCategoryView));
+            Assert.IsInstanceOfType(result.Model, typeof(HomeView));
 
-            var model = result.Model as HomeCategoryView;
+            var model = result.Model as HomeView;
 
             Assert.IsNotNull(model.Category);
             Assert.Equals(model.Category.Id, categoryId);

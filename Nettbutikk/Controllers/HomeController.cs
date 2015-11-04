@@ -19,6 +19,7 @@ namespace Nettbutikk.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.CategoryName = "Products";
             return View(new HomeView {
                 Categories = Services.Categories.GetAll<CategoryView>(),
                 Products = Services.Products.GetAll<ProductView>(),
@@ -28,7 +29,7 @@ namespace Nettbutikk.Controllers
 
         public ActionResult Category(int CategoryId)
         {
-            return View("Index", new HomeCategoryView()
+            return View("Index", new HomeView()
                 {
                     Categories = Services.Categories.GetAll<CategoryView>(),
                     Products = Services.Products

@@ -7,10 +7,6 @@ namespace Nettbutikk.Models
         public ICollection<CategoryView> Categories { get; set; }
         public bool LoggedIn { get; set; }
         public ICollection<ProductView> Products { get; set; }
-    }
-
-    public class HomeCategoryView : HomeView
-    {
         public CategoryView Category;
     }
 }

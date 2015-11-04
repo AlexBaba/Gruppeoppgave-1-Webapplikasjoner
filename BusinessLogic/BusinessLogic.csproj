@@ -76,17 +76,17 @@
     <Compile Include="Category\ICategoryService.cs" />
     <Compile Include="Image\IImageLogic.cs" />
     <Compile Include="Image\ImageBLL.cs" />
-    <Compile Include="IService.cs" />
+    <Compile Include="Infrastructure\IService.cs" />
     <Compile Include="Infrastructure\Logger.cs" />
     <Compile Include="Order\IOrderLogic.cs" />
-    <Compile Include="IEntityService.cs" />
-    <Compile Include="IMappingService.cs" />
-    <Compile Include="EntityService.cs" />
+    <Compile Include="Infrastructure\IEntityService.cs" />
+    <Compile Include="Infrastructure\IMappingService.cs" />
+    <Compile Include="Infrastructure\EntityService.cs" />
     <Compile Include="Product\IProductService.cs" />
     <Compile Include="Order\OrderBLL.cs" />
     <Compile Include="Product\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceManager.cs" />
+    <Compile Include="Infrastructure\ServiceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj">

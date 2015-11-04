@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Nettbutikk.BusinessLogic;
+using Nettbutikk.Models;
 
 namespace Nettbutikk.Controllers
 {
@@ -17,21 +18,22 @@ namespace Nettbutikk.Controllers
         }
 
         // GET: Product
-        public ActionResult Product(int ProductId,string ReturnUrl)
+        public ActionResult Product(int? Id, string ReturnUrl)
         {
-            var product = Services.Products.GetById(ProductId);
+            if (null == Id)
+                return HttpBadRequest();
+
+            var product = Services.Products.GetById<ProductView>(Id);
 
             if(null == product)
             {
                 return new HttpNotFoundResult();
             }
-
-            ViewBag.Product = product;
-            ViewBag.Product.Category = Services.Categories.GetById(product.CategoryId);
+            
             ViewBag.ReturnUrl = ReturnUrl;
             ViewBag.LoggedIn = LoginStatus();
 
-            return View();
+            return View(product);
         }
     }
 }

@@ -123,7 +123,7 @@ namespace Nettbutikk.BusinessLogic
         
         public TMappedEntity GetById<TMappedEntity>(object entityId)
         {
-            return GetById<TMappedEntity>(entityId);
+            return Mapper.Map<TMappedEntity>(GetById(entityId));
         }
         
         public ICollection<TMappedEntity> GetAll<TMappedEntity>()
