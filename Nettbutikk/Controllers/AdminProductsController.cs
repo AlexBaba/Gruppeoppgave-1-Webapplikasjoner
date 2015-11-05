@@ -1,6 +1,5 @@
 ﻿using Nettbutikk.Model;
 using Nettbutikk.Models;
-using System.Net;
 using System.Web.Mvc;
 using Nettbutikk.BusinessLogic;
 
@@ -16,7 +15,9 @@ namespace Nettbutikk.Controllers
 
         public AdminProductsController(ServiceManager services) : base(services)
         {
+
         }
+
         #region Create
 
         // GET: Products/Create

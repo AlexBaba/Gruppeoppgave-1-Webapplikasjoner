@@ -19,12 +19,18 @@ namespace Nettbutikk
         {
             protected override void Configure()
             {
-                Mapper.CreateMap<Category, CategoryView>();
-                Mapper.CreateMap<CategoryView, Category>();
-                Mapper.CreateMap<Category, CreateCategory>();
-                Mapper.CreateMap<CreateCategory, Category>();
-                Mapper.CreateMap<Category, EditCategory>();
-                Mapper.CreateMap<EditCategory, Category>();
+                Mapper.CreateMap<Category, CategoryView>()
+                    .ForMember(
+                        dest => dest.Name,
+                        opts => opts.MapFrom(src => src.Name))
+                    .ForMember(
+                        dest => dest.Id,
+                        opts => opts.MapFrom(src => src.CategoryId))
+                    .ReverseMap();
+                Mapper.CreateMap<Category, CreateCategory>()
+                    .ReverseMap();
+                Mapper.CreateMap<Category, EditCategory>()
+                    .ReverseMap();
             }
         }
 
@@ -32,12 +38,12 @@ namespace Nettbutikk
         {
             protected override void Configure()
             {
-                Mapper.CreateMap<Product, ProductView>();
-                Mapper.CreateMap<ProductView, Product>();
-                Mapper.CreateMap<Product, CreateProduct>();
-                Mapper.CreateMap<CreateProduct, Product>();
-                Mapper.CreateMap<Product, EditProduct>();
-                Mapper.CreateMap<EditProduct, Product>();
+                Mapper.CreateMap<Product, ProductView>()
+                    .ReverseMap();
+                Mapper.CreateMap<Product, CreateProduct>()
+                    .ReverseMap();
+                Mapper.CreateMap<Product, EditProduct>()
+                    .ReverseMap();
             }
         }
     }

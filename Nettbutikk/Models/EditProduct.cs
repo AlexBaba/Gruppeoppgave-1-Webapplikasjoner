@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Nettbutikk.Models
 {
-    public class EditProduct
+    public class EditProduct : ProductView
     {
-        public IEnumerable<Category> Categories { get; internal set; }
+        public IEnumerable<Category> Categories { get; set; }
     }
 }

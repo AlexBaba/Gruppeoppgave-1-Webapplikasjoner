@@ -1,9 +1,8 @@
-﻿using Nettbutikk.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nettbutikk.Models
 {
-    public class CreateProduct : Product
+    public class CreateProduct : ProductView
     {
         public ICollection<CategoryView> Categories { get; set; }
     }
