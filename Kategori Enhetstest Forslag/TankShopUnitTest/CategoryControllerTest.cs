@@ -130,7 +130,7 @@ namespace TankShopUnitTest
 
             //Assert
             Assert.AreEqual("Error", controller.ViewBag.Title);
-            Assert.AreEqual("Couldnt find an product with id: " + badCategoryId, controller.ViewBag.Message);
+            Assert.AreEqual("Couldnt find an category with id: " + badCategoryId, controller.ViewBag.Message);
             Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
         }
@@ -189,7 +189,7 @@ namespace TankShopUnitTest
 
             //Assert
             Assert.AreEqual("Error", controller.ViewBag.Title);
-            Assert.AreEqual("Could find an product with the id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("Could find an category with the id: " + categoryId, controller.ViewBag.Message);
             Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
         }
