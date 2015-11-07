@@ -5,11 +5,16 @@ namespace Nettbutikk.DataAccess
 {
     public class CategoryRepoStub : ICategoryRepo
     {
-        public bool AddCategory(string CategoryName)
+        public bool AddCategory(string Name)
         {
-            return true;
+            return Name != "invalid";
         }
-        
+
+        public bool AddOldCategory(string Name, int adminId)
+        {
+            return Name != "invalid";
+        }
+
         public bool DeleteCategory(int CategoryId)
         {
             return CategoryId != -1;
@@ -26,21 +31,15 @@ namespace Nettbutikk.DataAccess
 
             return allCategories;
         }
-
-
-        public Category GetCategory(int CategoryId)
+        
+        public Category GetCategory(int categoryId)
         {
-            
-            return CategoryId == -1 ? null : new Category { CategoryId = CategoryId, Name = "test"};
+            return categoryId == -1 ? null : new Category { CategoryId = categoryId, Name = "test"};
         }
-
-
-        public bool UpdateCategory(int CategoryId, string CategoryName)
+        
+        public bool UpdateCategory(int CategoryId, string Name)
         {
-
-            return CategoryId != -1; 
-           
+            return CategoryId != -1;
         }
-
     }
 }

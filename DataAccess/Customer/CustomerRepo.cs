@@ -62,7 +62,7 @@ namespace Nettbutikk.DataAccess
                             Zipcode = p.Zipcode,
                                 City = p.Postal.City
                             },
-                            CustomerId = c.CustomerId,
+                            Id = c.Id,
                             Orders = c.Orders.Select(o => new Order()
                             {
                                 CustomerId = o.CustomerId,
@@ -111,7 +111,7 @@ namespace Nettbutikk.DataAccess
             {
                 try
                 {
-                    return db.Customers.Include("Postal,Orders").FirstOrDefault(c => c.CustomerId == customerId);
+                    return db.Customers.Include("Postal,Orders").FirstOrDefault(c => c.Id == customerId);
                 }
                 catch (Exception)
                 {

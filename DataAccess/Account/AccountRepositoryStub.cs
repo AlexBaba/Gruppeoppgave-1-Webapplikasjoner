@@ -46,7 +46,7 @@ namespace Nettbutikk.DataAccess
                         Zipcode = "1234",
                         City = "Test"
                     },
-                    AdminId = 1
+                    Id = 1
                 };
                 return admin;
             }
@@ -98,7 +98,7 @@ namespace Nettbutikk.DataAccess
                         Zipcode = "1234",
                         City = "Test"
                     },
-                    CustomerId = 1
+                    Id = 1
                 };
             }
         }

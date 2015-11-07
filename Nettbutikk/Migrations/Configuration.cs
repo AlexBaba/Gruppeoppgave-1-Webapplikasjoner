@@ -360,7 +360,7 @@ namespace Nettbutikk.Migrations
             // Admins
             context.Admins.AddOrUpdate(new Admin
             {
-                AdminId = 1,
+                Id = 1,
                 Email = "admin"
             });
 
@@ -368,39 +368,39 @@ namespace Nettbutikk.Migrations
             context.Customers.AddOrUpdate(
             new Customer
             {
-                CustomerId = 1,
+                Id = 1,
                 Email = "per@gmail.com"
             }, new Customer
             {
-                CustomerId = 2,
+                Id = 2,
                 Email = "ole@gmail.com"
             }, new Customer
             {
-                CustomerId = 3,
+                Id = 3,
                 Email = "tyholt@apis.no"
             }, new Customer
             {
-                CustomerId = 4,
+                Id = 4,
                 Email = "admin"
             }, new Customer
             {
-                CustomerId = 5,
+                Id = 5,
                 Email = "ola@nordmann.no"
             }, new Customer
             {
-                CustomerId = 6,
+                Id = 6,
                 Email = "kari@nordmann.no"
             }, new Customer
             {
-                CustomerId = 7,
+                Id = 7,
                 Email = "jan@setesdal.no"
             }, new Customer
             {
-                CustomerId = 8,
+                Id = 8,
                 Email = "knut@nrk.no"
             }, new Customer
             {
-                CustomerId = 9,
+                Id = 9,
                 Email = "stalin@gmail.ru"
             });
 

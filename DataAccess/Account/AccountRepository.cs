@@ -60,32 +60,29 @@ namespace Nettbutikk.DataAccess
                             };
                             db.Admins.Add(dbAdmin);
                         }
-                        AdminId = dbAdmin.AdminId;
+                        AdminId = dbAdmin.Id;
                     }
                     if (role == Role.Customer)
                     {
                         var dbCustomer = db.Customers.FirstOrDefault(c => c.Email == email);
                         if (dbCustomer == null)
                         {
-                            dbCustomer = new Customer()
-                            {
-                                Email = email
-                            };
+                            dbCustomer = new Customer(person);
                             db.Customers.Add(dbCustomer);
                         }
-                        CustomerId = dbCustomer.CustomerId;
+                        CustomerId = dbCustomer.Id;
 
                     }
 
                     db.People.Add(person);
 
-                    db.SaveChanges();
                     transaction.Commit();
+                    db.SaveChanges();
 
                     return true;
 
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     transaction.Rollback();
                     return false;
@@ -197,7 +194,7 @@ namespace Nettbutikk.DataAccess
         {
             try
             {
-                return db.Customers.Include("Orders").FirstOrDefault(c => c.CustomerId == customerId);
+                return db.Customers.Include("Orders").FirstOrDefault(c => c.Id == customerId);
             }
             catch (Exception)
             {
@@ -221,11 +218,11 @@ namespace Nettbutikk.DataAccess
 
         public Admin GetAdmin(int adminId)
         {
-            var dbAdmin = db.Admins.FirstOrDefault(a => a.AdminId == adminId);
+            var dbAdmin = db.Admins.FirstOrDefault(a => a.Id == adminId);
             var dbPerson = GetPerson(dbAdmin.Email);
             var admin = new Admin()
             {
-                AdminId = adminId,
+                Id = adminId,
                 Email = dbPerson.Email,
                 Firstname = dbPerson.Firstname,
                 Lastname = dbPerson.Lastname,
@@ -238,11 +235,11 @@ namespace Nettbutikk.DataAccess
 
         public Admin GetAdmin(string email)
         {
-            var adminId = db.Admins.FirstOrDefault(a => a.Email == email).AdminId;
+            var adminId = db.Admins.FirstOrDefault(a => a.Email == email).Id;
             var dbPerson = GetPerson(email);
             var admin = new Admin()
             {
-                AdminId = adminId,
+                Id = adminId,
                 Email = dbPerson.Email,
                 Firstname = dbPerson.Firstname,
                 Lastname = dbPerson.Lastname,

@@ -14,7 +14,7 @@ namespace Nettbutikk.DataAccess
 
 
         //OldImage
-        bool AddOldImage(int productId, string imageUrl, Admin admin);
+        bool AddOldImage(Image image, Admin admin);
 
 
     }

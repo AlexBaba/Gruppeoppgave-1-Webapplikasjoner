@@ -13,7 +13,7 @@ namespace Nettbutikk.Model
 
         [Key]
         public int CategoryId { get; set; }
-        public List<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
         public string Name { get; set; }
     }
 }
