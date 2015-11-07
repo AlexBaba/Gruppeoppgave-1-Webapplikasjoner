@@ -22,7 +22,7 @@ namespace TankShopUnitTest
     {
         //GoodInput = input of correct type and value
         //BadInput = input of wrong type. For example "abc123" being sent instead of an int
-        //Invalid = input of correct type, but wrong value. For example a product id of -1
+      
 
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace TankShopUnitTest
             //Assert
             Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
             Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
-            Assert.AreEqual(expectedImage.CategoryId, actualCategory.CategoryId);
+            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
             Assert.AreEqual("", viewResult.ViewName);
         }
 
@@ -117,7 +117,7 @@ namespace TankShopUnitTest
 
 
         [TestMethod]
-        public void EditCategoryNoImageFound()
+        public void EditCategoryNoCategoryFound()
         {
 
             //Arrange
@@ -130,7 +130,7 @@ namespace TankShopUnitTest
 
             //Assert
             Assert.AreEqual("Error", controller.ViewBag.Title);
-            Assert.AreEqual("Couldnt find an image with id: " + badCategoryId, controller.ViewBag.Message);
+            Assert.AreEqual("Couldnt find an product with id: " + badCategoryId, controller.ViewBag.Message);
             Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
         }
@@ -189,7 +189,7 @@ namespace TankShopUnitTest
 
             //Assert
             Assert.AreEqual("Error", controller.ViewBag.Title);
-            Assert.AreEqual("Could find an image with the id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("Could find an product with the id: " + categoryId, controller.ViewBag.Message);
             Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
         }
@@ -226,7 +226,6 @@ namespace TankShopUnitTest
 
             //Assert
             Assert.AreEqual("Error", controller.ViewBag.Title);
-            Assert.AreEqual("Invalid product id", controller.ViewBag.Message);
             Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
         }
@@ -302,7 +301,7 @@ namespace TankShopUnitTest
             var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
             string categoryId = "1";
 
-            Image expectedResult = new Category { CategoryId = 1, Name = "test" };
+            Category expectedResult = new Category { CategoryId = 1, Name = "test" };
 
             //Act
             var viewResult = controller.Delete(categoryId) as ViewResult;
