@@ -1,241 +1,466 @@
+<<<<<<< .merge_file_a14496
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 using System.Collections.Generic;
-using System.Web.Mvc;
-using Nettbutikk.Model;
-using Nettbutikk.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Nettbutikk.Controllers.Tests
+namespace TankShopUnitTest
 {
     [TestClass]
-    public class CategoryControllerTest : ControllerTestsBase
+    public class CategoryControllerTest
     {
-        private CategoryController Controller { get; set; }
 
-        private List<Category> Categories = new List<Category> {
-            new Category { CategoryId = 1, Name = "test1"},
-            new Category { CategoryId = 2, Name = "test2"},
-            new Category { CategoryId = 3, Name = "test3"},
-            new Category { CategoryId = 4, Name = "test4"}
-        };
-
-        private List<Product> Products = new List<Product> {
-            new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
-            new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
-            new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1}
-        };
-
-        [TestInitialize]
-        public new void Setup()
-        {
-            base.Setup();
-            Services.Inject(new CategoryServiceStub(Categories));
-            Services.Inject(new ProductServiceStub(Products));
-            Controller = new CategoryController(Services);
-        }
-
-        [TestMethod]
-        public void Index()
-        {
-            var viewResult = Controller.Index() as ViewResult;
-            
-            //Assert
-            Assert.AreEqual(Categories.Count, viewResult.ViewBag.Categories.Count());
-
-            foreach (Category c in viewResult.ViewBag.Categories)
-            {
-                CollectionAssert.Contains(Categories, c);
-            }
-
-            Assert.AreEqual("ListCategory", viewResult.ViewName);
-        }
-
-        [TestMethod]
-        public void CreateCategory()
-        {
-            var expectedCategory = new Category { CategoryId = 1, Name = "test" };
-            
-            //Act
-            var viewResult = Controller.CreateCategory() as ViewResult;
-            var actualProductIDs = viewResult.ViewBag.ProductIDs;
-
-            //Assert
-            Assert.AreEqual(Products.Count, actualProductIDs.Count);
-            for (int i = 0; i < actualProductIDs.Count; i++)
-            {
-                Assert.AreEqual(Products[i].Name, actualProductIDs[i].Text);
-                Assert.AreEqual(Products[i].Id, actualProductIDs[i].Value);
-            }
-
-            Assert.AreEqual("", viewResult.ViewName);
-        }
-
-
-        [TestMethod]
-        public void EditCategoryGoodInput()
-        {
-
-            //Arrange
-            var controller = new CategoryController(Services);
-
-            var expectedCategory = new Category { CategoryId = 1, Name = "test" };
-            var allProducts = new List<Product> {
-                new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
-                new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1},
-                new Product { Id = 1, Name = "tank", Price = 150, Stock = 5, Description = "blows things up", CategoryId = 1}
-            };
-
-            List<SelectListItem> expectedProductIDs = new List<SelectListItem>();
-            foreach (Product p in allProducts)
-            {
-                string productId = Convert.ToString(p.Id);
-                expectedProductIDs.Add(new SelectListItem { Text = productId, Value = productId });
-            }
-            
-            //Act
-            var viewResult = controller.EditCategory(1) as ViewResult;
-            var actualCategory = controller.ViewBag.Category;
-            var actualProductIDs = controller.ViewBag.ProductIDs;
-
-            //Assert
-            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
-            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
-            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
-
-            Assert.AreEqual(expectedProductIDs.Count, actualProductIDs.Count);
-            for (int i = 0; i < actualProductIDs.Count; i++)
-            {
-                Assert.AreEqual(expectedProductIDs[i].Text, actualProductIDs[i].Text);
-                Assert.AreEqual(expectedProductIDs[i].Value, actualProductIDs[i].Value);
-            }
-
-            Assert.AreEqual("", viewResult.ViewName);
-        }
         
-        [TestMethod]
-        public void DeleteCategoryGoodInput()
-        {
-
-            //Arrange
-            int CategoryId = 2;
-
-            Category expectedResult = new Category { CategoryId = 2, Name = "test" };
-
-            //Act
-            var viewResult = Controller.DeleteCategory(CategoryId) as ViewResult;
-            
-            //Assert
-            Assert.AreEqual(expectedResult.CategoryId, viewResult.ViewBag.Category.CategoryId);
-            Assert.AreEqual(expectedResult.Name, viewResult.ViewBag.Category.CategoryUrl);
-
-            Assert.AreEqual("", viewResult.ViewName);
-        }
-        
-        [TestMethod]
-        public void DeleteCategoryNoCategoryFound()
-        {
-
-            //Arrange
-            int CategoryId = -1;
-
-            //Act
-            var viewResult = Controller.DeleteCategory(CategoryId) as ViewResult;
-
-            //Assert
-            Assert.AreEqual("Error", Controller.ViewBag.Title);
-            Assert.AreEqual("Could find an Category with the id: " + CategoryId, Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
-
-        }
 
 
-        [TestMethod]
-        public void CreateGoodInput()
-        {
-            var category = new CreateCategory
-            {
-                CategoryId = 1,
-                Name = "categoryName"
-            };
 
-            //Act
-            var viewResult = Controller.Create(category) as ViewResult;
 
-            //Assert
-            Assert.AreEqual("Success", Controller.ViewBag.Title);
-            Assert.AreEqual("Category was added to the database", Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
 
-        }
-        
-        [TestMethod]
-        public void EditGoodInput()
-        {
-
-            //Arrange
-            int categoryId = 1;
-            string categoryName = "name";
-
-            //Act
-            var viewResult = Controller.Edit(new EditCategory { CategoryId = categoryId, Name = categoryName}) as ViewResult;
-
-            //Assert
-            Assert.AreEqual("Success", Controller.ViewBag.Title);
-            Assert.AreEqual("Category was updated", Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
-
-        }
-        
-        [TestMethod]
-        public void EditInvalidCategoryId()
-        {
-            //Arrange
-            int CategoryId = -1;
-
-            //Act
-            var viewResult = Controller.Edit(new EditCategory {CategoryId = CategoryId}) as ViewResult;
-
-            //Assert
-            Assert.AreEqual("Error", Controller.ViewBag.Title);
-            Assert.AreEqual("Could not update the Category", Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
-
-        }
-        
-        [TestMethod]
-        public void DeleteGoodInput()
-        {
-
-            //Arrange
-            int categoryId = 1;
-            
-            //Act
-            var viewResult = Controller.Delete(categoryId) as ViewResult;
-
-            //Assert
-            Assert.AreEqual("Success", Controller.ViewBag.Title);
-            Assert.AreEqual("Category was deleted", Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
-
-        }
-
-        [TestMethod]
-        public void DeleteInvalidInput()
-        {
-
-            //Arrange
-            int CategoryId = -1;
-
-            //Act
-            var viewResult = Controller.Delete(CategoryId) as ViewResult;
-
-            //Assert
-            Assert.AreEqual("Error", Controller.ViewBag.Title);
-            Assert.AreEqual("Could not delete the Category", Controller.ViewBag.Message);
-            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
-
-        }
+    
 
     }
 }
 
+=======
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nettbutikk.Model;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using Nettbutikk.Controllers;
+using Nettbutikk.BLL;
+using Nettbutikk.DAL;
+using MvcContrib.TestHelper;
+using Nettbutikk.Models;
+
+namespace TankShopEnhetstest
+{
+    [TestClass]
+    public class CategoryControllerTest
+    {
+
+        [TestMethod]
+        public void Category_Index()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+            
+            var expectedCategories = new List<CategoryModel>() {
+                new CategoryModel { CategoryId = 1, CategoryName = "test name 1"},
+                new CategoryModel { CategoryId = 2, CategoryName = "test name 2"},
+                new CategoryModel { CategoryId = 3, CategoryName = "test name 3"},
+                new CategoryModel { CategoryId = 4, CategoryName = "test name 4"}
+            };
+            
+
+
+            //Act
+            var viewResult = controller.Index() as ViewResult;
+            var actualCategories = viewResult.ViewBag.Categories;
+
+
+            //Assert
+            Assert.AreEqual(expectedCategories.Count, actualCategories.Count);
+            for (int i = 0; i < actualCategories.Count; i++)
+            {
+                Assert.AreEqual(expectedCategories[i].CategoryId, actualCategories[i].CategoryId);
+                Assert.AreEqual(expectedCategories[i].CategoryName, actualCategories[i].CategoryName);
+            }
+
+            Assert.AreEqual("ListCategory", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_CreateCategory()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            //Act
+            var viewResult = controller.CreateCategory() as ViewResult;
+
+
+            //Assert
+            Assert.AreEqual("", viewResult.ViewName);
+        }
+
+
+        [TestMethod]
+        public void Category_EditCategory_GoodInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "2";
+            var expectedCategory = new CategoryModel { CategoryId = 2, CategoryName = "test name" };
+
+            //Act
+            var viewResult = controller.EditCategory(categoryId) as ViewResult;
+            var actualCategory = controller.ViewBag.Category;
+
+
+            //Assert
+            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
+            Assert.AreEqual(expectedCategory.CategoryName, actualCategory.CategoryName);
+
+            Assert.AreEqual("", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_EditCategory_BadInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "123abc";
+
+            //Act
+            var viewResult = controller.EditCategory(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Invalid category id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_EditCategory_InvalidInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "-1";
+
+            //Act
+            var viewResult = controller.EditCategory(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Couldnt find a category with id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_DeleteCategory_GoodInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "2";
+            var expectedCategory = new CategoryModel { CategoryId = 2, CategoryName = "test name" };
+
+            //Act
+            var viewResult = controller.DeleteCategory(categoryId) as ViewResult;
+            var actualCategory = controller.ViewBag.Category;
+
+
+            //Assert
+            Assert.AreEqual(expectedCategory.CategoryId, actualCategory.CategoryId);
+            Assert.AreEqual(expectedCategory.CategoryName, actualCategory.CategoryName);
+
+            Assert.AreEqual("", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_DeleteCategory_BadInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "123abc";
+
+            //Act
+            var viewResult = controller.DeleteCategory(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Invalid category id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_DeleteCategory_InvalidInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+            string categoryId = "-1";
+
+            //Act
+            var viewResult = controller.DeleteCategory(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Couldnt find a category with the id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Create()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryName = "test name";
+
+            //Act
+            var viewResult = controller.Create(categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Success", controller.ViewBag.Title);
+            Assert.AreEqual("Category was added to the database", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Create_NotAdmin()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = false;
+
+            string categoryName = "test name";
+
+            //Act
+            var viewResult = controller.Create(categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Only administrators can create categories", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+
+        [TestMethod]
+        public void Category_Edit_GoodInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryName = "test name";
+            string categoryId = "2";
+
+            //Act
+            var viewResult = controller.Edit(categoryId, categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Success", controller.ViewBag.Title);
+            Assert.AreEqual("Category was updated", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Edit_NotAdmin()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = false;
+
+            string categoryName = "test name";
+            string categoryId = "2";
+
+            //Act
+            var viewResult = controller.Edit(categoryId, categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Only administrators can edit categories", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Edit_BadInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryName = "test name";
+            string categoryId = "2asb";
+
+            //Act
+            var viewResult = controller.Edit(categoryId, categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Invalid category id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Edit_InvalidInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryName = "test name";
+            string categoryId = "-1";
+
+            //Act
+            var viewResult = controller.Edit(categoryId, categoryName) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Could not update the category", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+
+        [TestMethod]
+        public void Category_Delete_GoodInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryId = "2";
+
+            //Act
+            var viewResult = controller.Delete(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Success", controller.ViewBag.Title);
+            Assert.AreEqual("Category was deleted", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Delete_NotAdmin()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = false;
+
+            string categoryId = "2";
+
+            //Act
+            var viewResult = controller.Delete(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Only administrators can delete categories", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Delete_BadInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryId = "2asb";
+
+            //Act
+            var viewResult = controller.Delete(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Invalid category id: " + categoryId, controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+
+        [TestMethod]
+        public void Category_Delete_InvalidInput()
+        {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            var sessionMock = new TestControllerBuilder();
+            sessionMock.InitializeController(controller);
+            controller.Session["Admin"] = true;
+
+            string categoryId = "-1";
+
+            //Act
+            var viewResult = controller.Delete(categoryId) as ViewResult;
+
+            //Assert
+            Assert.AreEqual("Error", controller.ViewBag.Title);
+            Assert.AreEqual("Could not delete the category", controller.ViewBag.Message);
+            Assert.AreEqual("~/Views/Shared/Result.cshtml", viewResult.ViewName);
+
+        }
+        
+
+        /*
+                [TestMethod]
+        public void Index() {
+
+            //Arrange
+            var controller = new CategoryController(new CategoryBLL(new CategoryRepoStub()));
+
+            //Act
+            var viewResult = controller.EditImage(goodInput) as ViewResult;
+
+
+            //Assert
+
+        }
+        */
+        
+    }
+}
+>>>>>>> .merge_file_a14140

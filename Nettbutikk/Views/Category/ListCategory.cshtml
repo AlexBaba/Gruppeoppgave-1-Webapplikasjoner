@@ -23,12 +23,11 @@
                 @category.CategoryId
             </td>
             <td>
-                @category.Name
+                @category.CategoryName
             </td>
             <td>
 
                 @Html.ActionLink("Edit", "EditCategory", new { categoryId = category.CategoryId }) |
-                @Html.ActionLink("Details", "NOT_IMPLEMENTED_YET", new { categoryId = category.CategoryId }) |
                 @Html.ActionLink("Delete", "DeleteCategory", new { categoryId = category.CategoryId })
 
             </td>

@@ -1,9 +1,9 @@
-﻿namespace Nettbutikk.Model
+
+namespace Nettbutikk.Model
 {
     public enum Role
     {
         Admin,
         Customer
     };
-    
 }
