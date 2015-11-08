@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nettbutikk.Model
 {
@@ -13,6 +14,7 @@ namespace Nettbutikk.Model
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public virtual Category Category { get; set; }
+        public virtual IEnumerable<Image> Images { get; set; }
     }
 
 }

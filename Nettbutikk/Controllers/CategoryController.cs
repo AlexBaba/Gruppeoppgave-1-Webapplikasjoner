@@ -1,44 +1,38 @@
-﻿using Logging;
-using Nettbutikk.BLL;
+﻿using Nettbutikk.BusinessLogic;
 using Nettbutikk.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
-        private ICategoryLogic categoryBLL;
+        private ICategoryService Categories;
 
 
         public CategoryController()
         {
-            categoryBLL = new CategoryBLL();
+            Categories = new CategoryService();
         }
 
-        public CategoryController(ICategoryLogic categoryBLL)
+        public CategoryController(ICategoryService categories)
         {
-
-            this.categoryBLL = categoryBLL;
-
+            Categories = categories;
         }
 
         public ActionResult Index()
         {
             if ((Session["Admin"] == null ? false : (bool)Session["Admin"]))
             {
-                var allCategories = categoryBLL.GetAllCategories();
                 var categoryViews = new List<CategoryView>();
 
-                foreach (var category in allCategories)
+                foreach (var category in Categories.GetAll())
                 {
                     var categoryView = new CategoryView()
                     {
-                        CategoryId = category.CategoryId,
-                        CategoryName = category.CategoryName
+                        Id = category.CategoryId,
+                        Name = category.Name
                     };
                     categoryViews.Add(categoryView);
                 }
@@ -61,7 +55,7 @@ namespace Nettbutikk.Controllers
                 return View("~/Views/Shared/Result.cshtml");
             }
 
-            if (!categoryBLL.AddCategory(Name))
+            if (!Categories.AddCategory(Name))
             {
                 ViewBag.Title = "Error";
                 ViewBag.Message = "Could not add the category to the database";
@@ -100,7 +94,7 @@ namespace Nettbutikk.Controllers
                 return View("~/Views/Shared/Result.cshtml");
             }
 
-            if (!categoryBLL.UpdateCategory(categoryId, CategoryName))
+            if (!Categories.UpdateCategory(categoryId, CategoryName))
             {
                 ViewBag.Title = "Error";
                 ViewBag.Message = "Could not update the category";
@@ -138,7 +132,7 @@ namespace Nettbutikk.Controllers
                 return View("~/Views/Shared/Result.cshtml");
             }
 
-            if (!categoryBLL.DeleteCategory(categoryId))
+            if (!Categories.DeleteCategory(categoryId))
             {
                 ViewBag.Title = "Error";
                 ViewBag.Message = "Could not delete the category";
@@ -179,7 +173,7 @@ namespace Nettbutikk.Controllers
                 return View("~/Views/Shared/Result.cshtml");
             }
 
-            var category = categoryBLL.GetCategory(nCategoryId);
+            var category = Categories.GetCategory(nCategoryId);
 
             if (category == null)
             {
@@ -219,7 +213,7 @@ namespace Nettbutikk.Controllers
                 return View("~/Views/Shared/Result.cshtml");
             }
 
-            var category = categoryBLL.GetCategory(nCategoryId);
+            var category = Categories.GetCategory(nCategoryId);
 
             if (category == null)
             {

@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Nettbutikk.Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nettbutikk.Model;
-using Nettbutikk.DAL;
 
-namespace Nettbutikk.DAL
+namespace Nettbutikk.DataAccess
 {
     public class CategoryRepoStub : ICategoryRepo
     {
@@ -24,24 +20,7 @@ namespace Nettbutikk.DAL
         {
             return CategoryId != -1;
         }
-
-        //public List<Category> GetAllCategories()
-        //{
-        //    var allCategories = new List<Category> {
-        //        new Category { CategoryId = 1, Name = "test1"},
-        //        new Category { CategoryId = 2, Name = "test2"},
-        //        new Category { CategoryId = 3, Name = "test3"},
-        //        new Category { CategoryId = 4, Name = "test4"}
-        //    };
-
-        //    return allCategories;
-        //}
-
-        //public Category GetCategory(int categoryId)
-        //{
-        //    return categoryId == -1 ? null : new Category { CategoryId = categoryId, Name = "test" };
-        //}
-
+        
         public string GetCategoryName(int CategoryId)
         {
             throw new NotImplementedException();
@@ -49,26 +28,24 @@ namespace Nettbutikk.DAL
 
         public bool UpdateCategory(int CategoryId, string Name)
         {
-
             return CategoryId != -1;
-
         }
 
-        public List<CategoryModel> GetAllCategories()
+        public List<Category> GetAllCategories()
         {
-            var allCategories = new List<CategoryModel> {
-                new CategoryModel { CategoryId = 1, CategoryName = "test name 1"},
-                new CategoryModel { CategoryId = 2, CategoryName = "test name 2"},
-                new CategoryModel{ CategoryId = 3, CategoryName = "test name 3"},
-                new CategoryModel { CategoryId = 4, CategoryName = "test name 4"}
+            var allCategories = new List<Category> {
+                new Category { CategoryId = 1, Name = "test name 1"},
+                new Category { CategoryId = 2, Name = "test name 2"},
+                new Category { CategoryId = 3, Name = "test name 3"},
+                new Category { CategoryId = 4, Name = "test name 4"}
             };
 
             return allCategories;
         }
 
-        public CategoryModel GetCategory(int CategoryId)
+        public Category GetCategory(int CategoryId)
         {
-            return CategoryId == -1 ? null : new CategoryModel { CategoryId = CategoryId, CategoryName = "test name" };
+            return CategoryId == -1 ? null : new Category { CategoryId = CategoryId, Name = "test name" };
         }
 
         public int FirstCategoryWithProducts()

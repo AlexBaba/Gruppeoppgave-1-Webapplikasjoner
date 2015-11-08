@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Logging
+namespace Nettbutikk
 {
     public class LogHandler
     {

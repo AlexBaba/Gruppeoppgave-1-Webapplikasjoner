@@ -1,82 +1,57 @@
-﻿using System;
+﻿using Nettbutikk.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nettbutikk.Model;
-using Logging;
-using Nettbutikk.DAL;
 
 namespace Nettbutikk.Model
 {
     public class CategoryRepo : ICategoryRepo
     {
-
-
-        //public Category GetCategory(int CategoryId)
-        //{
-        //    try
-        //    {
-        //        return new TankshopDbContext().Categories.FirstOrDefault(c => c.CategoryId == CategoryId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LogHandler.WriteToLog(e);
-        //        return null;
-        //    }
-
-        //}
-
-        public List<CategoryModel> GetAllCategories()
+        public List<Category> GetAllCategories()
         {
-
             var db = new TankshopDbContext();
+            
+            var categoryModels = new List<Category>();
 
-            var dbCategories = db.Categories.ToList();
-            var categoryModels = new List<CategoryModel>();
-
-            foreach (var c in dbCategories)
+            foreach (var c in db.Categories.ToList())
             {
-                var productModels = new List<ProductModel>();
+                var productModels = new List<Product>();
                 
                 foreach(var product in c.Products)
                 {
-                    var imageModels = new List<ImageModel>();
+                    var imageModels = new List<Image>();
 
-                    foreach(var image in product.Images)
+                    foreach(var img in product.Images)
                     {
-                        var imageModel = new ImageModel()
+                        imageModels.Add(new Image
                         {
-                            ImageId = image.ImageId,
-                            ImageUrl = image.ImageUrl,
-                            ProductId = image.ProductId
-                        };
-                        imageModels.Add(imageModel);
+                            ImageId = img.ImageId,
+                            ImageUrl = img.ImageUrl,
+                            ProductId = img.ProductId
+                        });
                     }
-
-                    var productModel = new ProductModel()
+                    
+                    productModels.Add(new Product()
                     {
                         CategoryId = product.CategoryId,
-                        CategoryName = product.Category.Name,
+                        Category = product.Category,
                         Description = product.Description,
                         Price = product.Price,
-                        ProductId = product.ProductId,
-                        ProductName = product.Name,
+                        Id = product.Id,
+                        Name = product.Name,
                         Stock = product.Stock,
                         Images = imageModels
-                    };
-
-                    productModels.Add(productModel);
+                    });
                 }
 
-                var categoryModel = new CategoryModel()
+                var category = new Category()
                 {
                     CategoryId = c.CategoryId,
-                    CategoryName = c.Name,
+                    Name = c.Name,
                     Products = productModels
                 };
 
-                categoryModels.Add(categoryModel);
+                categoryModels.Add(category);
 
             }
             return categoryModels;
@@ -213,7 +188,7 @@ namespace Nettbutikk.Model
         //    }
         //}
 
-        public CategoryModel GetCategory(int CategoryId)
+        public Category GetCategory(int CategoryId)
         {
             using (var db = new TankshopDbContext())
             {
@@ -251,7 +226,7 @@ namespace Nettbutikk.Model
                     productModels.Add(productModel);
                 }
 
-                var categoryModel = new CategoryModel()
+                var categoryModel = new Category()
                 {
                     CategoryId = c.CategoryId,
                     CategoryName = c.Name,

@@ -130,6 +130,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -244,11 +245,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj">
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
       <Project>{a36e895f-863d-4c0d-afbc-99cc0fc0cb1b}</Project>
       <Name>BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAL\DAL.csproj">
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
       <Project>{854590CE-5EA6-4EE8-917F-9AEA3D3DDA27}</Project>
       <Name>DAL</Name>
     </ProjectReference>

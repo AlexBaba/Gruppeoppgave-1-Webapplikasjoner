@@ -1,21 +1,15 @@
-﻿using Nettbutikk.BLL;
-using Nettbutikk.Model;
-using Nettbutikk.Models;
-using System;
+﻿using Nettbutikk.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Nettbutikk.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : BaseController
     {
-        private ICustomerLogic _adminBLL;
-
         public CustomerController()
+            : base()
         {
-            _adminBLL = new CustomerBLL();
         }
 
         public CustomerController(ICustomerLogic stub)
