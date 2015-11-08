@@ -1,10 +1,18 @@
-﻿using Nettbutikk.Model;
+﻿using System.Collections.Generic;
+using Nettbutikk.Model;
 
-namespace Nettbutikk.BusinessLogic
+namespace BLL.Order
 {
     public interface IOrderLogic
     {
-        int PlaceOrder(Order order);
-        Order GetReciept(int orderId);
+        bool DeleteOrder(int orderId);
+        List<OrderModel> GetAllOrders();
+        List<ProductModel> GetAllProducts();
+        OrderModel GetOrder(int OrderId);
+        List<OrderModel> GetOrders(int CustomerId);
+        double GetOrderSumTotal(int orderId);
+        OrderModel GetReciept(int orderId);
+        int PlaceOrder(OrderModel order);
+        bool UpdateOrderline(OrderlineModel orderline);
     }
 }

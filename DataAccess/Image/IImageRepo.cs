@@ -1,7 +1,11 @@
-﻿using Nettbutikk.Model;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Nettbutikk.Model;
 
-namespace Nettbutikk.DataAccess
+namespace Nettbutikk.Image
 {
     public interface IImageRepo
     {
@@ -9,12 +13,12 @@ namespace Nettbutikk.DataAccess
         bool AddImage(int productId, string imageUrl);
         bool UpdateImage(int imageId, int productId, string imageUrl);
         bool DeleteImage(int imageId);
-        List<Image> GetAllImages();
-        Image GetImage(int imageId);
+        List<Nettbutikk.Model.Image> GetAllImages();
+        Nettbutikk.Model.Image GetImage(int imageId);
 
 
         //OldImage
-        bool AddOldImage(Image image, Admin admin);
+        bool AddOldImage(int productId, string imageUrl, int adminId);
 
 
     }

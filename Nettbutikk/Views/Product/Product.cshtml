@@ -1,12 +1,12 @@
 ﻿@using Nettbutikk.Models
-@model ProductView
-@{
-    var ReturnUrl = ViewBag.ReturnUrl;
+@{ 
+    ProductView product = ViewBag.Product;
+    var ReturnUrl = ViewBag.ReturnUrl ?? Url.Action("Index","Home");
 }
 
 
 <div class="wrapper">
     <a href="@ReturnUrl">Tilbake</a>
-    @Html.Partial("Product_Details", Model)
+    @Html.Partial("Product_Details", product)
 </div>
 

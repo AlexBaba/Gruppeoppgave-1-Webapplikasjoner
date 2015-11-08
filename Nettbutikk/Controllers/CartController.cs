@@ -3,18 +3,19 @@ using Nettbutikk.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using BLL.Product;
 
 namespace Nettbutikk.Controllers
 {
     public class CartController : BaseController
     {
         private const string SHOPPINGCART = "Shoppingcart";
-        
+
         public CartController()
             : base()
         {
         }
-        
+
         public ActionResult Cart(string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
@@ -29,10 +30,12 @@ namespace Nettbutikk.Controllers
             var ch = new CookieHandler();
             return ch.AddToCart(ProductId);
         }
-        public void EmptyCart()
+        public ActionResult EmptyCart(string returnUrl)
         {
             var ch = new CookieHandler();
             ch.EmptyCart();
+
+            return RedirectToAction("Cart",new { returnUrl = returnUrl });
         }
         public string GetCart()
         {

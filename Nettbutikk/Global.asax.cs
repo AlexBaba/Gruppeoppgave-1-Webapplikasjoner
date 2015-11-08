@@ -29,7 +29,7 @@ namespace Nettbutikk
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
-            }
+        }
 
             Logger.Initialize(folder);
         }

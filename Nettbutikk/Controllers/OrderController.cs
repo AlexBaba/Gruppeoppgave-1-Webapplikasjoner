@@ -1,11 +1,13 @@
-﻿using Nettbutikk.Models;
+﻿using Nettbutikk.Model;
+using Nettbutikk.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
+using BLL.Order;
 
 namespace Nettbutikk.Controllers
 {
-    public class OrderController : BaseController
+    public class OrderController : Controller
     {
 
         private IOrderLogic _orderBLL;

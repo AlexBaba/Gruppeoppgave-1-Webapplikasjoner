@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
-using Nettbutikk.Model;
+﻿using Nettbutikk.Model;
+using System;
+using System.Collections.Generic;
 
-namespace Nettbutikk.DataAccess
+
+namespace Nettbutikk.Order
 {
     public interface IOrderRepo
     {
-        int PlaceOrder(Order order);
-        Order GetReciept(int orderId);
-        IList<Order> GetAllOrders();
-        bool UpdateOrderline(Orderline orderline);
-        double GetOrderSumTotal(int orderId);
         bool DeleteOrder(int orderId);
+        List<OrderModel> GetAllOrders();
+        OrderModel GetOrder(int orderId);
+        List<OrderModel> GetOrders(int customerId);
+        double GetOrderSumTotal(int orderId);
+        OrderModel GetReciept(int orderId);
+        int PlaceOrder(OrderModel order);
+        bool UpdateOrderline(OrderlineModel orderline);
     }
 }

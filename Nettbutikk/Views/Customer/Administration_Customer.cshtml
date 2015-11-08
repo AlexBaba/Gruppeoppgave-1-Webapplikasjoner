@@ -1,4 +1,4 @@
-﻿@using Oblig1_Nettbutikk.Models
+﻿@using Nettbutikk.Models
 @{
     ViewBag.Title = "Administration_Customer";
 
@@ -54,7 +54,7 @@
     </div>
 </div>
 <div class="divAdminChangePassword">
-    @model Oblig1_Nettbutikk.Models.CustomerChangePassword
+    @model Nettbutikk.Models.CustomerChangePassword
 
     <div class="form-horizontal">
         <h4>Endre Passord</h4>
@@ -93,7 +93,7 @@
 
 <div class="divAdminCustomerOrders">
 <hr class="hr-dark"/>
-   @{Html.RenderAction("OrdersPartial", new { CustomerId = Customer.CustomerId });}
+   @{Html.RenderAction("OrdersPartial","Order", new { CustomerId = Customer.CustomerId });}
    
    
 </div>

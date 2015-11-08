@@ -17,7 +17,7 @@ namespace Nettbutikk.DataAccess
                 return new TankshopDbContext().Images.FirstOrDefault(i => i.ImageId == imageId);
             }
             catch (Exception e) {
-                //LogHandler.WriteToLog(e);
+                LogHandler.WriteToLog(e);
                 return null;
             }
 
@@ -27,10 +27,10 @@ namespace Nettbutikk.DataAccess
         {
 
             try {
-                return new TankshopDbContext().Images.ToList();
+                return new TankshopDbContext().Images.OrderBy(i => i.ProductId).ToList();
             }
             catch (Exception e) {
-                //LogHandler.WriteToLog(e);
+                LogHandler.WriteToLog(e);
                 return new List<Image>();
             }
             
@@ -43,11 +43,13 @@ namespace Nettbutikk.DataAccess
             try
             {
                 var db = new TankshopDbContext();
-                db.Images.Add(new Image() { Product = new Product { Id = productId }, ImageUrl = imageUrl });
+                db.Images.Add(new Image() { ProductId = productId, ImageUrl = imageUrl });
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { }//LogHandler.WriteToLog(e); }
+            catch (Exception e) {
+                LogHandler.WriteToLog(e);
+            }
 
             return false;
             
@@ -70,7 +72,9 @@ namespace Nettbutikk.DataAccess
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { }//LogHandler.WriteToLog(e); }
+            catch (Exception e) {
+                LogHandler.WriteToLog(e);
+            }
 
             return false;
         }
@@ -97,6 +101,7 @@ namespace Nettbutikk.DataAccess
                 return true;
             }
             catch (Exception e) {
+                LogHandler.WriteToLog(e);
             }
 
             return false;
@@ -104,7 +109,7 @@ namespace Nettbutikk.DataAccess
 
 
         //OldImage
-        public bool AddOldImage(Image image, Admin admin)
+        public bool AddOldImage(int productId, string imageUrl, int adminId)
         {
             var db = new TankshopDbContext();
             OldImage oldImage = new OldImage();
@@ -113,12 +118,14 @@ namespace Nettbutikk.DataAccess
             oldImage.ImageUrl = image.ImageUrl;
             oldImage.Changer = admin;
             oldImage.Changed = DateTime.Now;
-            
+
             try {
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception e) { }//LogHandler.WriteToLog(e); }
+            catch (Exception e) {
+                LogHandler.WriteToLog(e);
+            }
 
             return false;
         }

@@ -1,12 +1,12 @@
-﻿using Nettbutikk.DAL;
-using Nettbutikk.Model;
+﻿using Nettbutikk.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DAL.Customer;
+using DAL.Account;
+using DAL.Order;
+using DAL.Product;
 
-namespace Nettbutikk.BLL
+namespace BLL.Customer
 {
     public class CustomerBLL :ICustomerLogic
     {

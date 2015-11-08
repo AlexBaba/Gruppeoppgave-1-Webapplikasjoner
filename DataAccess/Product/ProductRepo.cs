@@ -4,58 +4,254 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Oblig1_Nettbutikk.Model;
+using Nettbutikk.Model;
+using Logging;
 
-namespace Oblig1_Nettbutikk.DAL
+namespace DAL.Product
 {
     public class ProductRepo : IProductRepo
     {
-        public List<CategoryModel> AllCategories()
+
+        public bool AddProduct(string Name, double Price, int Stock, string Description, string ImageUrl, int CategoryId)
         {
             using (var db = new TankshopDbContext())
             {
-                var dbCategories = db.Categories.ToList();
-                var categoryModels = new List<CategoryModel>();
-                foreach (var c in dbCategories)
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    var categoryModel = new CategoryModel()
+                    try
                     {
-                        CategoryId = c.CategoryId,
-                        CategoryName = c.Name,
-                        Products = GetProductsByCategory(c.CategoryId)
+                        var newProduct = new Nettbutikk.Model.Product()
+                        {
+                            Name = Name,
+                            Price = Price,
+                            Stock = Stock,
+                            Description = Description,
+                            CategoryId = CategoryId
+                        };
 
+                        db.Products.Add(newProduct);
+                        db.SaveChanges();
+
+                        var newImage = new Nettbutikk.Model.Image()
+                        {
+                            ImageUrl = ImageUrl,
+                            ProductId = newProduct.ProductId
                     };
-                    categoryModels.Add(categoryModel);
+                        db.SaveChanges();
+
+                        transaction.Commit();
+                        return true;
                 }
-                return categoryModels;
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        LogHandler.WriteToLog(e);
             }
         }
+            }
 
-        public string GetCategoryName(int categoryId)
+            return false;
+        }
+
+        public bool AddOldProduct(string Name, double Price, int Stock, string Description, string ImageUrl, int CategoryId, int AdminId)
         {
+            var db = new TankshopDbContext();
+            OldProduct oldProduct = new OldProduct();
+
+            oldProduct.Name = Name;
+            oldProduct.Price = Price;
+            oldProduct.Stock = Stock;
+            oldProduct.Description = Description;
+            oldProduct.ImageUrl = ImageUrl;
+            oldProduct.CategoryId = CategoryId;
+
+            oldProduct.AdminId = AdminId;
+            oldProduct.Changed = DateTime.Now;
+
+            db.OldProducts.Add(oldProduct);
+
+            try
+            {
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogHandler.WriteToLog(e);
+            }
+
+            return false;
+        }
+
+        public bool DeleteProduct(int ProductId)
+        {
+            var db = new TankshopDbContext();
+
+            Nettbutikk.Model.Product product = (from p in db.Products where p.ProductId == ProductId select p).FirstOrDefault();
+
+            if (product == null)
+                return false;
+
+
+            try
+            {
+                db.Products.Remove(product);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogHandler.WriteToLog(e);
+            }
+
+            return false;
+        }
+
+        public List<ProductModel> GetAllProducts()
+        {
+            var productModels = new List<ProductModel>();
+            try
+            {
             using (var db = new TankshopDbContext())
             {
-                return db.Categories.Find(categoryId).Name;
+                    var dbProducts = db.Products.ToList();
+
+                    foreach (var product in dbProducts)
+                    {
+                        var dbProductImages = db.Images.Where(i => i.ProductId == product.ProductId).ToList();
+                        var imageModels = new List<ImageModel>();
+
+                        foreach (var image in dbProductImages)
+                        {
+                            var imageModel = new ImageModel()
+                            {
+                                ImageId = image.ImageId,
+                                ImageUrl = image.ImageUrl,
+                                ProductId = image.ProductId
+                            };
+                            imageModels.Add(imageModel);
+            }
+
+                        var productModel = new ProductModel()
+                        {
+                            CategoryId = product.CategoryId,
+                            CategoryName = product.Category.Name,
+                            Description = product.Description,
+                            Price = product.Price,
+                            ProductId = product.ProductId,
+                            ProductName = product.Name,
+                            Stock = product.Stock,
+                            Images = imageModels
+                        };
+                        productModels.Add(productModel);
+        }
+                    return productModels;
+                }
+            }
+            catch (Exception e)
+            {
+                LogHandler.WriteToLog(e);
+                return productModels;
             }
         }
+
+        //public Product GetProduct(int ProductId)
+        //{
+
+        //    try
+        //    {
+        //        return new TankshopDbContext().Products.Find(ProductId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        LogHandler.WriteToLog(e);
+        //        return null;
+        //    }
+
+        //}
 
         public ProductModel GetProduct(int ProductId)
         {
             using (var db = new TankshopDbContext())
             {
                 var product = db.Products.Find(ProductId);
+                var dbProductImages = db.Images.Where(i => i.ProductId == product.ProductId).ToList();
+                var imageModels = new List<ImageModel>();
+
+                foreach (var image in dbProductImages)
+                {
+                    var imageModel = new ImageModel()
+                    {
+                        ImageId = image.ImageId,
+                        ImageUrl = image.ImageUrl,
+                        ProductId = image.ProductId
+                    };
+                    imageModels.Add(imageModel);
+                }
+
                 var productModel = new ProductModel()
                 {
                     CategoryId = product.CategoryId,
                     CategoryName = product.Category.Name,
                     Description = product.Description,
-                    ImageUrl = product.ImageUrl,
                     Price = product.Price,
                     ProductId = product.ProductId,
                     ProductName = product.Name,
-                    Stock = product.Stock
+                    Stock = product.Stock,
+                    Images = imageModels
                 };
                 return productModel;
+            }
+        }
+
+        public List<ProductModel> GetProducts(string searchstr)
+        {
+            using (var db = new TankshopDbContext())
+            {
+                var productList = new List<ProductModel>();
+                try
+                {
+                    var dbProducts = db.Products.Where(p => p.Name.Contains(searchstr)
+                                                        || p.Category.Name.Contains(searchstr)
+                                                        //|| p.Description.Contains(searchstr)
+                                                        ).ToList();
+                    foreach (var product in dbProducts)
+                    {
+                        var dbProductImages = db.Images.Where(i => i.ProductId == product.ProductId).ToList();
+                        var imageModels = new List<ImageModel>();
+
+                        foreach (var image in dbProductImages)
+                        {
+                            var imageModel = new ImageModel()
+                            {
+                                ImageId = image.ImageId,
+                                ImageUrl = image.ImageUrl,
+                                ProductId = image.ProductId
+                            };
+                            imageModels.Add(imageModel);
+                        }
+
+                        var productModel = new ProductModel()
+                        {
+                            CategoryId = product.CategoryId,
+                            CategoryName = product.Category.Name,
+                            Description = product.Description,
+                            Price = product.Price,
+                            ProductId = product.ProductId,
+                            ProductName = product.Name,
+                            Stock = product.Stock,
+                            Images = imageModels
+                        };
+
+                        productList.Add(productModel);
+                    }
+
+                    return productList;
+                }
+                catch (Exception)
+                {
+                    return productList;
+                }
             }
         }
 
@@ -72,16 +268,30 @@ namespace Oblig1_Nettbutikk.DAL
                         var product = db.Products.Find(productId);
                         if (product != null)
                         {
+                            var dbProductImages = db.Images.Where(i => i.ProductId == product.ProductId).ToList();
+                            var imageModels = new List<ImageModel>();
+
+                            foreach (var image in dbProductImages)
+                            {
+                                var imageModel = new ImageModel()
+                                {
+                                    ImageId = image.ImageId,
+                                    ImageUrl = image.ImageUrl,
+                                    ProductId = image.ProductId
+                                };
+                                imageModels.Add(imageModel);
+                            }
+
                             var productModel = new ProductModel()
                             {
-                                ProductId = product.ProductId,
-                                ProductName = product.Name,
+                                CategoryId = product.CategoryId,
+                                CategoryName = product.Category.Name,
                                 Description = product.Description,
                                 Price = product.Price,
+                                ProductId = product.ProductId,
+                                ProductName = product.Name,
                                 Stock = product.Stock,
-                                ImageUrl = product.ImageUrl,
-                                CategoryId = product.CategoryId,
-                                CategoryName = product.Category.Name
+                                Images = imageModels
                             };
 
                             productList.Add(productModel);
@@ -99,27 +309,73 @@ namespace Oblig1_Nettbutikk.DAL
 
         public List<ProductModel> GetProductsByCategory(int categoryId)
         {
-            using(var db = new TankshopDbContext())
+            using (var db = new TankshopDbContext())
             {
                 var dbProducts = db.Products.Where(p => p.CategoryId == categoryId).ToList();
                 var productModels = new List<ProductModel>();
-                foreach(var product in dbProducts)
+                foreach (var product in dbProducts)
                 {
-                    productModels.Add(new ProductModel()
+                    var dbProductImages = db.Images.Where(i => i.ProductId == product.ProductId).ToList();
+                    var imageModels = new List<ImageModel>();
+
+                    foreach (var image in dbProductImages)
+                    {
+                        var imageModel = new ImageModel()
+                {
+                            ImageId = image.ImageId,
+                            ImageUrl = image.ImageUrl,
+                            ProductId = image.ProductId
+                        };
+                        imageModels.Add(imageModel);
+                    }
+
+                    var productModel = new ProductModel()
                     {
                         CategoryId = product.CategoryId,
                         CategoryName = product.Category.Name,
                         Description = product.Description,
-                        ImageUrl = product.ImageUrl,
                         Price = product.Price,
                         ProductId = product.ProductId,
                         ProductName = product.Name,
-                        Stock = product.Stock
-                    });
+                        Stock = product.Stock,
+                        Images = imageModels
+                    };
+                    productModels.Add(productModel);
                 }
                 return productModels;
                 
             }
         }
+
+        public bool UpdateProduct(int ProductId, string Name, double Price, int Stock, string Description, string ImageUrl, int CategoryId)
+        {
+            var db = new TankshopDbContext();
+
+            Nettbutikk.Model.Product product = (from p in db.Products where p.ProductId == ProductId select p).FirstOrDefault();
+            Nettbutikk.Model.Image image = db.Images.Where(i => i.ProductId == ProductId).FirstOrDefault();
+            if (product == null)
+                return false;
+
+
+            product.Name = Name;
+            product.Price = Price;
+            product.Stock = Stock;
+            product.Description = Description;
+            product.CategoryId = CategoryId;
+            image.ImageUrl = ImageUrl;
+
+            try
+            {
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogHandler.WriteToLog(e);
+            }
+
+            return false;
+        }
+
     }
 }

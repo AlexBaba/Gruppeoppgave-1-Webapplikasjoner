@@ -41,12 +41,9 @@ namespace Nettbutikk.DataAccess
                     Firstname = "Ole",
                     Lastname = "Olsen",
                     Address = "Persveien 5",
-                    Postal = new Postal
-                    {
-                        Zipcode = "1234",
-                        City = "Test"
-                    },
-                    Id = 1
+                    Zipcode = "0123",
+                    City = "Oslo",
+                    AdminId = 1
                 };
                 return admin;
             }
@@ -61,11 +58,8 @@ namespace Nettbutikk.DataAccess
                 Firstname = "Ole",
                 Lastname = "Olsen",
                 Address = "Persveien 5",
-                Postal = new Postal
-                {
-                    Zipcode = "1234",
-                    City = "Test"
-                }
+                Zipcode = "0123",
+                City = "Oslo"
             };
 
             list.Add(person);
@@ -75,33 +69,7 @@ namespace Nettbutikk.DataAccess
             return list;
         }
 
-        public Customer GetCustomer(int customerId)
-        {
-            if (customerId == 0)
-            {
-                var customer = new Customer()
-                {
-                    Email = ""
-                };
-                return customer;
-            }
-            else
-            {
-                return new Customer()
-                {
-                    Email = "Test@test.cz",
-                    Firstname = "Test",
-                    Lastname = "Test",
-                    Address = "Test",
-                    Postal = new Postal
-                    {
-                        Zipcode = "1234",
-                        City = "Test"
-                    },
-                    Id = 1
-                };
-            }
-        }
+       
 
 
         public Person GetPerson(string email)
@@ -123,10 +91,13 @@ namespace Nettbutikk.DataAccess
                     Lastname = "Olsen",
                     Address = "Persveien 5",
                     Postal = new Postal
-                    {
-                        Zipcode = "1234",
-                        City = "Test"
-                    }
+                {
+                    Email = "ole@gmail.com",
+                    Firstname = "Ole",
+                    Lastname = "Olsen",
+                    Address = "Persveien 5",
+                    Zipcode = "0123",
+                    City = "Oslo"
                 };
                 return person;
             }
@@ -185,12 +156,15 @@ namespace Nettbutikk.DataAccess
 
         public Admin GetAdmin(string email)
         {
-            throw new NotImplementedException();
+            return new AdminModel { AdminId = 1, Email = email};
         }
 
         public bool UpdatePerson(Person personUpdate, string email)
         {
-            throw new NotImplementedException();
+            if (email == "")
+                return false;
+
+            return true;
         }
 
         public bool DeletePerson(string email)
@@ -204,6 +178,11 @@ namespace Nettbutikk.DataAccess
         }
 
         public bool SetRole(string email, Role role, bool isRole)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isAdmin(string email)
         {
             throw new NotImplementedException();
         }

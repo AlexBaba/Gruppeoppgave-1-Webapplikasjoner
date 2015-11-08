@@ -22,20 +22,20 @@ namespace Nettbutikk.BusinessLogic
             return repo.AddImage(productId,imageUrl);
         }
 
-        public bool DeleteImage(int imageId)
+        public bool DeleteImage(int imageId, int adminId)
         {
             Image img = repo.GetImage(imageId);
 
             if (img == null)
                 return false;
 
-            if (!repo.AddOldImage(img, new Admin { Id = 1 }))//Get admin id from session
+            if (!repo.AddOldImage(img.ProductId, img.ImageUrl, adminId))
                 return false; 
 
             return repo.DeleteImage(imageId);
         }
 
-        public IList<Image> GetAllImages()
+        public List<Image> GetAllImages()
         {
             return repo.GetAllImages();
         }
@@ -45,7 +45,7 @@ namespace Nettbutikk.BusinessLogic
             return repo.GetImage(imageId);
         }
 
-        public bool UpdateImage(int imageId, int productId, string imageUrl)
+        public bool UpdateImage(int imageId, int productId, string imageUrl, int adminId)
         {
 
             Image img = repo.GetImage(imageId);
@@ -53,7 +53,7 @@ namespace Nettbutikk.BusinessLogic
             if (img == null)
                 return false;
 
-            if (!repo.AddOldImage(img, new Admin { Id = 1 }))//Get admin id from session
+            if (!repo.AddOldImage(img.ProductId, img.ImageUrl, adminId))
                 return false;
 
             return repo.UpdateImage(imageId, productId, imageUrl);

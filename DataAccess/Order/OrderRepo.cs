@@ -2,126 +2,221 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Nettbutikk.DataAccess
+namespace Nettbutikk.Order
 {
     public class OrderRepo : IOrderRepo
     {
-        private ITankshopDbContext _db;
-
-        private ITankshopDbContext db { get { return _db?? (_db = new TankshopDbContext()); } set { _db = value; } }
-        public List<Order> GetOrders(int customerId)
+        public List<OrderModel> GetOrders(int customerId)
         {
-            var customerOrders = new List<Order>();
-            var dbOrders = db.Orders.OrderByDescending(o => o.Date);
-
-            foreach (var order in dbOrders)
+            using (var db = new TankshopDbContext())
             {
-                if (order.CustomerId == customerId)
-                    customerOrders.Add(GetOrder(order.OrderId));
-            }
+                var customerOrders = new List<OrderModel>();
+                var dbOrders = db.Orders.ToList(); ;
 
-            return customerOrders;
-        }
-
-        public Order GetOrder(int orderId)
-        {
-            var dbOrder = db.Orders.Find(orderId);
-            if (dbOrder == null)
-                return null;
-
-            var order = new Order()
-            {
-                CustomerId = dbOrder.CustomerId,
-                OrderId = dbOrder.OrderId,
-                Orderlines = db.Orderlines.Where(l => l.OrderId == dbOrder.OrderId).Select(l => new Orderline()
+                foreach (var dbOrder in dbOrders)
                 {
-                    OrderlineId = l.OrderlineId,
-                    OrderId = l.OrderId,
-                    ProductId = l.ProductId,
-                    Count = l.Count,
-                    ProductName = l.Product.Name,
-                    ProductPrice = l.Product.Price
-
-                }).ToList(),
-                Date = dbOrder.Date
-            };
-
-            return order;
-        }
-
-        public int PlaceOrder(Order order)
-        {
-            try
-            {
-                var newOrder = new Order()
-                {
-                    CustomerId = order.CustomerId,
-                    Date = order.Date
-                };
-
-                foreach (var item in order.Orderlines)
-                {
-                    var product = db.Products.Find(item.ProductId);
-                    var orderline = new Orderline()
+                    if (dbOrder.CustomerId == customerId)
                     {
-                        Product = product,
-                        Count = item.Count,
-                        ProductId = item.ProductId
-                    };
-
-                    newOrder.Orderlines.Add(orderline);
+                        try
+                        {
+                            var order = GetOrder(dbOrder.OrderId);
+                            var count = order.Orderlines.Count;
+                            if (count > 0)
+                                customerOrders.Add(GetOrder(dbOrder.OrderId));
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
                 }
 
-                db.Orders.Add(newOrder);
-                db.SaveChanges();
-                return newOrder.OrderId;
-            }
-            catch (Exception)
-            {
-                return 0;
+                return customerOrders;
+
             }
         }
 
-        public Order GetReciept(int orderId)
+        public OrderModel GetOrder(int orderId)
         {
-            var dbOrder = db.Orders.Find(orderId);
-            var orderModel = new Order()
+            using (var db = new TankshopDbContext())
             {
-                CustomerId = dbOrder.CustomerId,
-                Date = dbOrder.Date,
-                OrderId = dbOrder.OrderId,
-                Orderlines = dbOrder.Orderlines.Select(l => new Orderline()
+                var dbOrder = db.Orders.Find(orderId);
+                if (dbOrder == null)
+                    return null;
+
+                var order = new OrderModel()
                 {
-                    Count = l.Count,
-                    OrderlineId = l.OrderlineId,
-                    ProductId = l.ProductId,
-                    ProductName = l.Product.Name,
-                    ProductPrice = l.Product.Price
-                }).ToList()
-            };
+                    CustomerId = dbOrder.CustomerId,
+                    OrderId = dbOrder.OrderId,
+                    Orderlines = db.Orderlines.Where(l => l.OrderId == dbOrder.OrderId).Select(l => new OrderlineModel()
+                    {
+                        OrderlineId = l.OrderlineId,
+                        OrderId = l.OrderId,
+                        ProductId = l.ProductId,
+                        Count = l.Count,
+                        ProductName = l.Product.Name,
+                        ProductPrice = l.Product.Price
 
-            return orderModel;
+                    }).ToList(),
+                    Date = dbOrder.Date
+                };
+
+                return order;
+            }
         }
 
-        public IList<Order> GetAllOrders()
+        public int PlaceOrder(OrderModel order)
         {
-            return db.Orders.ToList();
+            using (var db = new TankshopDbContext())
+            {
+                try
+                {
+                    var newOrder = new Nettbutikk.Model.Order()
+                    {
+                        CustomerId = order.CustomerId,
+                        Date = order.Date
+                    };
+
+                    foreach (var item in order.Orderlines)
+                    {
+                        var product = db.Products.Find(item.ProductId);
+                        var orderline = new Orderline()
+                        {
+                            Product = product,
+                            Count = item.Count,
+                            ProductId = item.ProductId
+                        };
+
+                        newOrder.Orderlines.Add(orderline);
+                    }
+
+                    db.Orders.Add(newOrder);
+                    db.SaveChanges();
+                    return newOrder.OrderId;
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+            }
         }
 
-        public bool UpdateOrderline(Orderline orderline)
+        public OrderModel GetReciept(int orderId)
         {
-            throw new NotImplementedException();
+            using (var db = new TankshopDbContext())
+            {
+                var dbOrder = db.Orders.Find(orderId);
+                var orderModel = new OrderModel()
+                {
+                    CustomerId = dbOrder.CustomerId,
+                    Date = dbOrder.Date,
+                    OrderId = dbOrder.OrderId,
+                    Orderlines = dbOrder.Orderlines.Select(l => new OrderlineModel()
+                    {
+                        Count = l.Count,
+                        OrderlineId = l.OrderlineId,
+                        ProductId = l.ProductId,
+                        ProductName = l.Product.Name,
+                        ProductPrice = l.Product.Price
+                    }).ToList()
+                };
+
+                return orderModel;
+            }
+        }
+
+        public List<OrderModel> GetAllOrders()
+        {
+            using(var db = new TankshopDbContext())
+            {
+                var dbOrders = db.Orders.ToList();
+                var orderModels = new List<OrderModel>();
+
+                foreach(var dbOrder in dbOrders)
+                {
+                    try
+                    {
+                        var order = GetOrder(dbOrder.OrderId);
+                        var count = order.Orderlines.Count;
+                        if (count > 0)
+                            orderModels.Add(order);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                }
+
+                return orderModels;
+            }
+        }
+
+        public bool UpdateOrderline(OrderlineModel orderline)
+        {
+            using (var db = new TankshopDbContext())
+            {
+                try
+                {
+                    var dbOrderline = db.Orderlines.Find(orderline.OrderlineId);
+
+                    if (orderline.Count == 0)
+                    {
+                        db.Orderlines.Remove(dbOrderline);
+                    }
+                    else
+                    {
+                        dbOrderline.ProductId = orderline.ProductId;
+                        dbOrderline.Count = orderline.Count;
+                    }
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
         }
 
         public double GetOrderSumTotal(int orderId)
         {
-            throw new NotImplementedException();
+            using (var db = new TankshopDbContext())
+            {
+                var sumTotal = 0.0;
+                var dbOrder = db.Orders.Find(orderId);
+
+                foreach (var l in dbOrder.Orderlines)
+                {
+                    var price = l.Product.Price;
+                    var count = l.Count;
+                    sumTotal += price * count;
+                }
+
+                return sumTotal;
+
+            }
         }
 
         public bool DeleteOrder(int orderId)
         {
-            throw new NotImplementedException();
+            using(var db = new TankshopDbContext())
+            {
+                try
+                {
+                    var dbOrder = db.Orders.Find(orderId);
+                    db.Orders.Remove(dbOrder);
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+
+            }
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using Nettbutikk.Model;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Nettbutikk.Model;
 
-namespace Nettbutikk.DataAccess
+namespace Nettbutikk.Image
 {
     public class ImageRepoStub : IImageRepo
     {
@@ -10,9 +14,9 @@ namespace Nettbutikk.DataAccess
             return productId != -1;
         }
 
-        public bool AddOldImage(Image image, Admin changer)
+        public bool AddOldImage(int productId, string imageUrl, int adminId)
         {
-            return image.Product.Id != -1;
+            return productId != -1;
         }
 
         public bool DeleteImage(int imageId)
@@ -20,23 +24,23 @@ namespace Nettbutikk.DataAccess
             return imageId != -1;
         }
 
-        public List<Image> GetAllImages()
+        public List<Nettbutikk.Model.Image> GetAllImages()
         {
-            var allImages = new List<Image> {
-                new Image { ImageId = 1, Product = new Product { Id = 1 }, ImageUrl = "test1"},
-                new Image { ImageId = 2, Product = new Product { Id = 2 }, ImageUrl = "test2"},
-                new Image { ImageId = 3, Product = new Product { Id = 3 }, ImageUrl = "test3"},
-                new Image { ImageId = 4, Product = new Product { Id = 4 }, ImageUrl = "test4"}
+            var allImages = new List<Nettbutikk.Model.Image> {
+                new Nettbutikk.Model.Image { ImageId = 1, ProductId = 1, ImageUrl = "test1"},
+                new Nettbutikk.Model.Image { ImageId = 2, ProductId = 2, ImageUrl = "test2"},
+                new Nettbutikk.Model.Image { ImageId = 3, ProductId = 3, ImageUrl = "test3"},
+                new Nettbutikk.Model.Image { ImageId = 4, ProductId = 4, ImageUrl = "test4"}
             };
 
             return allImages;
         }
 
 
-        public Image GetImage(int imageId)
+        public Nettbutikk.Model.Image GetImage(int imageId)
         {
             
-            return imageId == -1 ? null : new Image { ImageId = imageId, Product = new Product { Id = 1 }, ImageUrl = "test"};
+            return imageId == -1 ? null : new Nettbutikk.Model.Image { ImageId = imageId, ProductId = 1, ImageUrl = "test"};
         }
 
 

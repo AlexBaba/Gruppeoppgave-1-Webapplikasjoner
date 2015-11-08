@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Nettbutikk.BusinessLogic;
 using Nettbutikk.Model;
+using BLL.Account;
 
 namespace Nettbutikk.Controllers
 {
@@ -28,6 +29,11 @@ namespace Nettbutikk.Controllers
 
             if (_accountBLL.AttemptLogin(email, password))
             {
+                if (_accountBLL.isAdmin(email))
+                    Session["Admin"] = true;
+                else
+                    Session["Admin"] = false;
+
                 Session["LoggedIn"] = true;
                 Session["Email"] = email;
                 ViewBag.LoggedIn = true;
@@ -45,7 +51,7 @@ namespace Nettbutikk.Controllers
         {
             Session.Abandon();
             ViewBag.LoggedIn = false;
-
+            TempData.Clear();
         }
 
         [HttpPost]
@@ -59,8 +65,8 @@ namespace Nettbutikk.Controllers
                 Address = customer.Address,
                 Postal = new Postal
                 {
-                    Zipcode = customer.Zipcode,
-                    City = customer.City
+                Zipcode = customer.Zipcode,
+                City = customer.City
                 }
             };
 
@@ -123,22 +129,6 @@ namespace Nettbutikk.Controllers
                 customerOrders.Add(order);
             }
 
-            //var customerOrders = Customer.Orders.Select(o => new OrderView()
-            //{
-            //    OrderId = o.OrderId,
-            //    Orderlines = o.Orderlines.Select(l => new OrderlineView()
-            //    {
-            //        OrderlineId = l.OrderlineId,
-            //        Count = l.Count,
-            //        Product = new ProductView()
-            //        {
-            //            ProductId = l.ProductId,
-            //            ProductName = l.ProductName,
-            //            Price = l.ProductPrice
-            //        }
-            //    }).ToList()
-            //}).ToList();
-
             ViewBag.LoggedIn = LoginStatus();
             ViewBag.Customer = customerView;
             ViewBag.CustomerOrders = customerOrders;
@@ -158,8 +148,8 @@ namespace Nettbutikk.Controllers
                 Address = customerEdit.Address,
                 Postal = new Postal
                 {
-                    Zipcode = customerEdit.Zipcode,
-                    City = customerEdit.City
+                Zipcode = customerEdit.Zipcode,
+                City = customerEdit.City
                 }
             };
 
@@ -180,8 +170,8 @@ namespace Nettbutikk.Controllers
                     Address = customerEdit.Address,
                     Postal = new Postal
                     {
-                        Zipcode = customerEdit.Zipcode,
-                        City = customerEdit.City
+                    Zipcode = customerEdit.Zipcode,
+                    City = customerEdit.City
                     }
                 };
 

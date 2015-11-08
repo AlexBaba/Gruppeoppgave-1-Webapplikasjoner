@@ -1,80 +1,92 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Nettbutikk.Model;
-using Nettbutikk.DataAccess;
+using DAL.Account;
+using DAL.Customer;
 
-namespace Nettbutikk.BusinessLogic
+namespace BLL.Account
 {
     public class AccountBLL : IAccountLogic
     {
       
-        private IAccountRepository AccountRepository;
-        private ICustomerRepository CustomerRepository;
+        private IAccountRepo _repo;
+        private ICustomerRepo _customerrepo;
 
         public AccountBLL()
         {
-            AccountRepository = new AccountRepository();
+            _repo = new AccountRepo();
+            _customerrepo = new CustomerRepo();
         }
 
-        public AccountBLL(IAccountRepository accountRepository, ICustomerRepository customerRepository)
+        public AccountBLL(IAccountRepo stub)
         {
-            AccountRepository = accountRepository;
-            CustomerRepository = customerRepository;
+            _repo = stub;
+            _customerrepo = new CustomerRepoStub();
         }
 
-        public bool AddPerson(Person person, Role role, string password)
+        public bool AddPerson(PersonModel person, Role role, string password)
         {
-            return AccountRepository.AddPerson(person, role, password);
+            return _repo.AddPerson(person, role, password);
         }
         
 
-        public Admin GetAdmin(int adminId)
+        public AdminModel GetAdmin(int adminId)
         {
-            return AccountRepository.GetAdmin(adminId);
+            return _repo.GetAdmin(adminId);
         }
 
-        public List<Person> GetAllPeople()
+        public List<PersonModel> GetAllPeople()
         {
-            return AccountRepository.GetAllPeople();
+            return _repo.GetAllPeople();
         }
 
-        public Customer GetCustomer(int customerId)
+        public CustomerModel GetCustomer(int customerId)
         {
-            return CustomerRepository.GetCustomer(customerId);
+            return _customerrepo.GetCustomer(customerId);
         }
 
-        public Customer GetCustomer(string email)
+        public CustomerModel GetCustomer(string email)
         {
-            return CustomerRepository.GetCustomer(email);
+            return _customerrepo.GetCustomer(email);
         }
 
         public bool AttemptLogin(string email, string password)
         {
-            return AccountRepository.AttemptLogin(email, password);
+            return _repo.AttemptLogin(email, password);
         }
 
         public bool ChangePassword(string email, string newPassword)
         {
-            return AccountRepository.ChangePassword(email, newPassword);
+            return _repo.ChangePassword(email, newPassword);
         }
 
         public bool DeletePerson(string email)
         {
-            return AccountRepository.DeletePerson(email);
+            return _repo.DeletePerson(email);
         }
 
-        public Admin GetAdmin(string email)
+        public AdminModel GetAdmin(string email)
         {
-            return AccountRepository.GetAdmin(email);
+            return _repo.GetAdmin(email);
         }
 
-        public Person GetPerson(string email)
+        public PersonModel GetPerson(string email)
         {
-            return AccountRepository.GetPerson(email);
+            return _repo.GetPerson(email);
         }
 
-        public bool UpdatePerson(Person personUpdate, string email)
+        public bool UpdatePerson(PersonModel personUpdate, string email)
         {
-            return AccountRepository.UpdatePerson(personUpdate, email);
+            return _repo.UpdatePerson(personUpdate, email);
         }
+
+        public bool isAdmin(string email)
+        {
+            return _repo.isAdmin(email);
+        }
+        
     }
 }
